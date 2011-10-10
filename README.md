@@ -4,30 +4,33 @@ Simple "Hello, World" with BlueEyes
 To run locally:
 ---------------
 
-1) Clone this repo
-2) Create a BlueEyes conf file:
+1. Clone this repo
 
-    echo "server {\n  port = 8585\n  sslEnable = false\n}" > server.conf
+2. Create a BlueEyes conf file:
 
-3) Compile the app and create a start script:
+        echo -e "server {\n  port = 8585\n  sslEnable = false\n}" > server.conf
 
-    sbt stage
+3. Compile the app and create a start script:
 
-4) Run the app:
+        sbt stage
 
-    target/start
+4. Run the app:
+
+        target/start
 
 
 To run on Heroku:
 -----------------
 
-1) Clone this repo
-2) Have the Heroku client installed and setup (ssh keys, logged in, etc)
-3) Create an app on Heroku:
+1. Clone this repo
 
-    heroku create -s cedar
+2. Have the Heroku client installed and setup (ssh keys, logged in, etc)
 
-4) Push the app to Heroku:
+3. Create an app on Heroku:
 
-    git push heroku master
+        heroku create -s cedar
+
+4. Push the app to Heroku:
+
+        git push heroku master
 
