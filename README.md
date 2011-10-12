@@ -28,11 +28,11 @@ To run on Heroku:
 
 3. Create an app on Heroku:
 
-        heroku create -s cedar
+    heroku create -s cedar
 
-4. Push the app to Heroku:
+4. Push the app to Heroku; it will automatically be (re)built and run:
 
-        git push heroku master
+    git push heroku master
 
 
 To run a client:
@@ -40,14 +40,17 @@ To run a client:
 
 You can access a local instance via:
 
-        curl --header "Content-Type:application/json" http://localhost:8585/
+    curl --header "Content-Type:application/json" http://localhost:8585/
 
 Without the correct `Content-Type header` there will be no response.
-Access the heroku instance via:
+Access [Mike Slinn](http://micronauticsresearch.com)'s Heroku instance via:
 
-        curl --header "Content-Type:application/json" http://strong-galaxy-4334.herokuapp.com/
+    curl --header "Content-Type:application/json" http://strong-galaxy-4334.herokuapp.com/
 
-The Heroku remote repository for this project is git@heroku.com:strong-galaxy-4334.git
+Mike Slinn's Heroku remote repository for this project is:
+
+	git@heroku.com:strong-galaxy-4334.git
+
 Mess around with [sbt on Heroku](http://devcenter.heroku.com/articles/scala#console) with this:
 
-        heroku run sbt console
+    heroku run sbt console
