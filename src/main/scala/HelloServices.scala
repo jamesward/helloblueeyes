@@ -3,25 +3,34 @@ import blueeyes.concurrent.Future
 import blueeyes.core.http.{HttpRequest, HttpResponse}
 import blueeyes.core.http.MimeTypes._
 import blueeyes.core.http.combinators.HttpRequestCombinators
-import blueeyes.core.data.BijectionsChunkString
+import blueeyes.core.data.{BijectionsChunkString, ByteChunk}
+import blueeyes.core.service.{HttpService, HttpServiceContext}
+import blueeyes.json.JsonAST._
+import blueeyes.core.data.{ByteChunk, BijectionsChunkJson}
+import blueeyes.persistence.mongo.{ConfigurableMongo, MongoFilterAll, Mongo, MongoFilter}
 
-
-trait HelloServices extends BlueEyesServiceBuilder with HttpRequestCombinators with BijectionsChunkString {
-    val hello = service("hello", "0.1") { context =>
-        request {
-            path("/") {
-                produce(text/html) {
-                    get { request =>
-                        val content = <html>
-                                         <body>hello, world</body>
-                                      </html>
-                        val response = HttpResponse[String](content = Some(content.buildString(true)))
-                        Future.sync(response)
-                     }
-                }
+trait HelloServices extends BlueEyesServiceBuilder with HttpRequestCombinators
+       with BijectionsChunkString with BijectionsChunkJson with ConfigurableMongo {
+    val hello:HttpService[ByteChunk] = service("hello", "0.1") { context:HttpServiceContext =>
+      startup {
+        Future.sync(()) /* return a future of unit */
+      } ->
+      request { state:Unit=> /* request function accepts a fn as a parameter and accepts a state and returns a request handler */
+        path("/") {
+          jvalue {
+            get { requestParam:HttpRequest[JValue] =>
+               val json = JString("Hello World!")
+               val response = HttpResponse[JValue](content = Some(json))
+               println(response);
+               Future.sync(response)
             }
+          }
         }
-    }
+      } ->
+      shutdown { state =>
+        Future.sync(()) /* access state */
+      }
+   }
 }
 
 

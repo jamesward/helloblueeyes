@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="org.xlightweb_xlightweb_2.13.2">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.xlightweb/xlightweb/jars/xlightweb-2.13.2.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.xlightweb/xlightweb/docs/xlightweb-2.13.2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/org.xlightweb/xlightweb/srcs/xlightweb-2.13.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
