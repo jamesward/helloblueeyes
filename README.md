@@ -24,15 +24,17 @@ To run on Heroku:
 
 1. Clone this repo.
 
-2. Have the [Heroku client](http://toolbelt.herokuapp.com/) installed and set up (ssh keys, logged in, etc).
+2. Have the [Heroku client](http://toolbelt.herokuapp.com/) installed and set up (ssh keys).
+
+        heroku login
 
 3. Create an app on Heroku:
 
-    heroku create -s cedar
+        heroku create -s cedar
 
 4. Push the app to Heroku; it will automatically be (re)built and run:
 
-    git push heroku master
+        git push heroku master
 
 
 To run a client:
@@ -43,7 +45,7 @@ You can access a local instance via:
     curl --header "Content-Type:application/json" http://localhost:8585/
 
 Without the correct `Content-Type header` there will be no response.
-Access [Mike Slinn](http://micronauticsresearch.com)'s Heroku instance via:
+Access [Mike Slinn's](http://micronauticsresearch.com) Heroku instance via:
 
     curl --header "Content-Type:application/json" http://strong-galaxy-4334.herokuapp.com/
 
