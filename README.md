@@ -43,4 +43,11 @@ You can access a local instance via:
         curl --header "Content-Type:application/json" http://localhost:8585/
 
 Without the correct `Content-Type header` there will be no response.
-Not sure what the URL for heroku might be yet.
+Access the heroku instance via:
+
+        curl --header "Content-Type:application/json" http://strong-galaxy-4334.herokuapp.com/
+
+The Heroku remote repository for this project is git@heroku.com:strong-galaxy-4334.git
+Mess around with [sbt on Heroku](http://devcenter.heroku.com/articles/scala#console) with this:
+
+        heroku run sbt console
