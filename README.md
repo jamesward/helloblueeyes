@@ -34,3 +34,12 @@ To run on Heroku:
 
         git push heroku master
 
+
+To run a client:
+----------------
+
+You can access a local instance via:
+curl --header "Content-Type:application/json" http://localhost:8585/
+
+Without the correct Content-Type header there will be no response.
+Not sure what the URL for heroku might be
