@@ -22,9 +22,9 @@ To run locally:
 To run on Heroku:
 -----------------
 
-1. Clone this repo
+1. Clone this repo.
 
-2. Have the Heroku client installed and setup (ssh keys, logged in, etc)
+2. Have the [Heroku client](http://toolbelt.herokuapp.com/) installed and set up (ssh keys, logged in, etc).
 
 3. Create an app on Heroku:
 
@@ -39,7 +39,8 @@ To run a client:
 ----------------
 
 You can access a local instance via:
-curl --header "Content-Type:application/json" http://localhost:8585/
 
-Without the correct Content-Type header there will be no response.
-Not sure what the URL for heroku might be
+        curl --header "Content-Type:application/json" http://localhost:8585/
+
+Without the correct `Content-Type header` there will be no response.
+Not sure what the URL for heroku might be yet.
