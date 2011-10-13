@@ -5,9 +5,6 @@ import blueeyes.core.http.MimeTypes._
 import blueeyes.core.http.combinators.HttpRequestCombinators
 import blueeyes.core.data.{BijectionsChunkString, ByteChunk}
 
-import net.lag.logging.Logger
-
-
 trait HelloStartupShutdownServices extends BlueEyesServiceBuilder with HttpRequestCombinators with BijectionsChunkString {
   
     val helloStartupShutdown= service("helloHtml", "0.1") { context =>
@@ -17,20 +14,20 @@ trait HelloStartupShutdownServices extends BlueEyesServiceBuilder with HttpReque
         } ->
         request {
           println("request")
-            path("/hello") {
-              println("path /")
-                produce(text/html) {
-                  println("produce html")
-                    get { request: HttpRequest[ByteChunk] =>
-                      println("get")
-                        val content = <html>
-                                         <body>hello, world</body>
-                                      </html>
-                        val response = HttpResponse[String](content = Some(content.buildString(true)))
-                        Future.sync(response)
-                     }
-                }
+          path("/hello") {
+            println("path /")
+            produce(text/html) {
+              println("produce html")
+              get { request: HttpRequest[ByteChunk] =>
+                println("get")
+                val content = <html>
+                                 <body>hello, world</body>
+                              </html>
+                val response = HttpResponse[String](content = Some(content.buildString(true)))
+                Future.sync(response)
+              }
             }
+          }
         } ->
         shutdown {
           println("shutdown")
