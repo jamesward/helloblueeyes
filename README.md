@@ -46,29 +46,29 @@ To run a client:
 ----------------
 
 1. You can access a local instance of the services:
-a. Hello service:
+   1. Hello service:
 
     http://localhost:8585/hello
 
-b. HTML service:
+   2. HTML service:
 
     http://localhost:8585/
 
-d. JSON service (without the correct `Content-Type header` there will be no response from the JSON service).
+   3. JSON service (without the correct `Content-Type header` there will be no response from the JSON service).
 
     curl --header "Content-Type:application/json" http://localhost:8585/json
 
 
 2. Access [Mike Slinn's](http://micronauticsresearch.com) Heroku instance:
-a. Hello service:
+   a. Hello service:
 
     http://strong-galaxy-4334.herokuapp.com/hello
 
-b. HTML service:
+   b. HTML service:
 
     http://strong-galaxy-4334.herokuapp.com
 
-c. JSON service (without the correct `Content-Type header` there will be no response from the JSON service).
+   c. JSON service (without the correct `Content-Type header` there will be no response from the JSON service).
 
     curl --header "Content-Type:application/json" http://strong-galaxy-4334.herokuapp.com/json
 
