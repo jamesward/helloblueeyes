@@ -37,42 +37,39 @@ To run on Heroku:
         git push heroku master
 
 
-You can run the sbt console on Heroku:
+You can also manually run the sbt console on Heroku:
 
     heroku run sbt console
 
 
-To run a client:
-----------------
+To run clients on local service instances
+-----------------------------------------
 
-1. You can access a local instance of the services:
-   * Hello service:
+* Hello service:
 
-    http://localhost:8585/hello
+        http://localhost:8585/hello
 
+* HTML service:
 
-   * HTML service:
+        http://localhost:8585
 
-    http://localhost:8585/
+* JSON service (without the correct `Content-Type header` there will be no response from the JSON service).
 
+        curl --header "Content-Type:application/json" http://localhost:8585/json
 
-   * JSON service (without the correct `Content-Type header` there will be no response from the JSON service).
+To run clients on [Mike Slinn's](http://micronauticsresearch.com) Heroku instance
+---------------------------------------------------------------------------------
 
-    curl --header "Content-Type:application/json" http://localhost:8585/json
+* Hello service:
 
+        http://strong-galaxy-4334.herokuapp.com/hello
 
-2. Access [Mike Slinn's](http://micronauticsresearch.com) Heroku instance:
-   * Hello service:
+* HTML service:
 
-    http://strong-galaxy-4334.herokuapp.com/hello
+        http://strong-galaxy-4334.herokuapp.com
 
+* JSON service (without the correct `Content-Type header` there will be no response from the JSON service).
 
-   * HTML service:
+        curl --header "Content-Type:application/json" http://strong-galaxy-4334.herokuapp.com/json
 
-    http://strong-galaxy-4334.herokuapp.com
-
-
-   * JSON service (without the correct `Content-Type header` there will be no response from the JSON service).
-
-    curl --header "Content-Type:application/json" http://strong-galaxy-4334.herokuapp.com/json
 
