@@ -50,9 +50,11 @@ To run a client:
 
     http://localhost:8585/hello
 
+
    * HTML service:
 
     http://localhost:8585/
+
 
    * JSON service (without the correct `Content-Type header` there will be no response from the JSON service).
 
@@ -64,9 +66,11 @@ To run a client:
 
     http://strong-galaxy-4334.herokuapp.com/hello
 
+
    * HTML service:
 
     http://strong-galaxy-4334.herokuapp.com
+
 
    * JSON service (without the correct `Content-Type header` there will be no response from the JSON service).
 
