@@ -45,14 +45,8 @@ You can also manually run the sbt console on Heroku:
 To run clients against local service instances
 -----------------------------------------
 
-* Hello service - point a web browser to:
-
-        http://localhost:8585/hello
-
-* HTML service - point a web browser to:
-
-        http://localhost:8585
-
+* Hello service - point a web browser to [http://localhost:8585/hello](http://localhost:8585/hello)
+* HTML service - point a web browser to [http://localhost:8585](http://localhost:8585)
 * JSON service (without the correct `Content-Type header` there will be no response from the JSON service).
 
         curl --header "Content-Type:application/json" http://localhost:8585/json
@@ -60,14 +54,8 @@ To run clients against local service instances
 To run clients against [Mike Slinn's](http://micronauticsresearch.com) Heroku instance
 ---------------------------------------------------------------------------------
 
-* Hello service - point a web browser to:
-
-        http://strong-galaxy-4334.herokuapp.com/hello
-
-* HTML service - point a web browser to:
-
-        http://strong-galaxy-4334.herokuapp.com
-
+* Hello service - point a web browser to [http://strong-galaxy-4334.herokuapp.com/hello](http://strong-galaxy-4334.herokuapp.com/hello)
+* HTML service - point a web browser to [http://strong-galaxy-4334.herokuapp.com](http://strong-galaxy-4334.herokuapp.com)
 * JSON service (without the correct `Content-Type header` there will be no response from the JSON service).
 
         curl --header "Content-Type:application/json" http://strong-galaxy-4334.herokuapp.com/json
