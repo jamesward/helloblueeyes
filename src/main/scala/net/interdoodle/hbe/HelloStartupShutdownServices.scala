@@ -1,3 +1,5 @@
+package net.interdoodle.hbe
+
 import blueeyes._
 import blueeyes.concurrent.Future
 import blueeyes.core.http.{HttpResponse, HttpRequest}

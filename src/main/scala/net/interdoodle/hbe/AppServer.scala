@@ -1,3 +1,5 @@
+package net.interdoodle.hbe
+
 import blueeyes._
 
 object AppServer extends BlueEyesServer with HelloHtmlServices with HelloJsonServices with HelloStartupShutdownServices {
