@@ -3,4 +3,12 @@ project/boot
 project/project
 project/target
 target
+.idea/*
 
+/.idea/workspace.xml
+/.idea/misc.xml
+/.idea/findbugs-idea.xml
+/.idea/ant.xml
+/.idea/qaplug_profiles.xml
+/.idea/uiDesigner.xml
+/.idea/compiler.xml
