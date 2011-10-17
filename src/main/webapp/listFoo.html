@@ -1,0 +1,35 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+    <head>
+        <script type="text/javascript">
+
+            function handleOnload()
+            {
+                var head = document.getElementsByTagName("head")[0] || document.documentElement;
+                var scriptNode = document.createElement('script');
+                scriptNode.src = "http://localhost:8585/mongo";
+                scriptNode.type = "text/javascript";
+                head.appendChild(scriptNode);
+            }
+
+            function parseResponse(data)
+            {
+                var s = "";
+
+                for each (var item in data)
+                {
+                    s += item.foo + "<br/>";
+                }
+
+                document.getElementById("fooslist").innerHTML = s;
+            }
+        </script>
+    </head>
+
+    <body onload="handleOnload()">
+        <div id="fooslist">
+
+        </div>
+    </body>
+
+</html>
