@@ -17,6 +17,6 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "com.reportgrid" % "blueeyes_2.9.1" % "latest.integration" % "compile"
+  "com.reportgrid" % "blueeyes_2.9.1" % "latest.integration" % "compile",
+  "org.scalatest" %% "scalatest" % "1.6.1" % "test"
 )
-
