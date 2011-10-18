@@ -8,7 +8,7 @@ import blueeyes.core.http.combinators.HttpRequestCombinators
 import blueeyes.core.data.{BijectionsChunkString, ByteChunk}
 
 trait HelloStartupShutdownServices extends BlueEyesServiceBuilder with HttpRequestCombinators with BijectionsChunkString {
-  val helloStartupShutdown= service("helloHtml", "0.1") { context =>
+  val helloStartupShutdown= service("helloStartupShutdown", "0.1") { context =>
     startup {
       println("startup")
       Future.sync(())
@@ -16,7 +16,7 @@ trait HelloStartupShutdownServices extends BlueEyesServiceBuilder with HttpReque
     request {
       println("request")
       path("/hello") {
-        println("path /")
+        println("path /hello")
         produce(text/html) {
           println("produce html")
           get { request: HttpRequest[ByteChunk] =>
