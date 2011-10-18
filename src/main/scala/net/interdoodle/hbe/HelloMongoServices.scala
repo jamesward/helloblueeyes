@@ -2,19 +2,13 @@ package net.interdoodle.hbe
 
 import blueeyes.BlueEyesServiceBuilder
 import blueeyes.concurrent.Future
-import blueeyes.core.http.{HttpResponse, HttpRequest}
+import blueeyes.core.http.HttpResponse
 import blueeyes.core.http.MimeTypes._
 import blueeyes.core.http.combinators.HttpRequestCombinators
-import blueeyes.core.data.{BijectionsChunkString, ByteChunk}
+import blueeyes.core.data.BijectionsChunkString
 import blueeyes.json.Printer;
-import blueeyes.json.JsonAST.{JField, JString, JObject, JValue, JArray}
-import blueeyes.persistence.mongo.MongoCollectionHolder._
-import blueeyes.persistence.mongo.MongoQueryTask._
-import akka.actor.Actor
-import akka.routing.Routing._
-import akka.routing.CyclicIterator
+import blueeyes.json.JsonAST.{JField, JString, JObject, JArray}
 import com.mongodb._
-import net.lag.configgy.ConfigMap
 import blueeyes.persistence.mongo._
 
 trait HelloMongoServices extends BlueEyesServiceBuilder with HttpRequestCombinators with BijectionsChunkString with MongoQueryBuilder {
