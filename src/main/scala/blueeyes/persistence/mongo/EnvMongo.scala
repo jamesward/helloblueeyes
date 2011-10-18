@@ -19,7 +19,9 @@ class EnvMongo(val mongoURI: MongoURI, val config: ConfigMap) extends RealMongo(
 
   override def database(databaseName: String) = {
     val db: DB = mongo.getDB(databaseName)
-    db.authenticate(mongoURI.getUsername, mongoURI.getPassword)
+    if ((mongoURI.getUsername != null) && (mongoURI.getPassword != null)) {
+      db.authenticate(mongoURI.getUsername, mongoURI.getPassword)
+    }
     new RealDatabase(this, db)
   }
 
