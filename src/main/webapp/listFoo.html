@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 
     <head>
@@ -16,17 +17,20 @@
             {
                 var s = "";
 
-                for each (var item in data)
+                for (var i = 0; i < data.length; i++)
                 {
-                    s += item.foo + "<br/>";
+                    s += data[i].foo + "<br/>";
                 }
 
                 document.getElementById("fooslist").innerHTML = s;
             }
+
+            document.onload = handleOnload();
+
         </script>
     </head>
 
-    <body onload="handleOnload()">
+    <body>
         <div id="fooslist">
 
         </div>

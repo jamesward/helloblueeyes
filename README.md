@@ -6,26 +6,10 @@ To run locally:
 
 1. Clone this [git repo](https://github.com/jamesward/helloblueeyes).
 
-2. Create the BlueEyes configuration file, called ```server.conf``` by convention:
+2. Set the environment variables:
 
-        echo -e "server {\n  port = 8585\n  sslEnable = false\n}" > server.conf
-
-or you can create a new file called ```server.conf``` containing the following:
-
-    server {
-      port = 8585
-      sslEnable = false
-    }
-    services {
-      helloMongo {
-        v0 {
-          mongo {
-            databaseName = "hello"
-            servers = ["127.0.0.1:27017"]
-          }
-        }
-      }
-    }
+        export PORT=8585
+        export MONGOLAB_URI=mongodb://127.0.0.1:27017/hello
 
 3. Compile the app and create a start script:
 
@@ -47,7 +31,7 @@ To run on Heroku:
 
 3. Create an app on Heroku:
 
-        heroku create -s cedar
+        heroku create --stack cedar --addons mongolab:starter
 
 4. Push the app to Heroku; it will automatically be (re)built and run:
 

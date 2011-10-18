@@ -1,38 +1,41 @@
 package net.interdoodle.hbe
 
-//import blueeyes._
 import blueeyes.BlueEyesServiceBuilder
 import blueeyes.concurrent.Future
 import blueeyes.core.http.{HttpResponse, HttpRequest}
 import blueeyes.core.http.MimeTypes._
 import blueeyes.core.http.combinators.HttpRequestCombinators
 import blueeyes.core.data.{BijectionsChunkString, ByteChunk}
-import blueeyes.persistence.mongo.{ConfigurableMongo, Mongo, MongoSelectQuery}
 import blueeyes.json.Printer;
 import blueeyes.json.JsonAST.{JField, JString, JObject, JValue, JArray}
+import blueeyes.persistence.mongo.MongoCollectionHolder._
+import blueeyes.persistence.mongo.MongoQueryTask._
+import akka.actor.Actor
+import akka.routing.Routing._
+import akka.routing.CyclicIterator
+import com.mongodb._
 import net.lag.configgy.ConfigMap
+import blueeyes.persistence.mongo._
 
-trait HelloMongoServices extends BlueEyesServiceBuilder with HttpRequestCombinators with BijectionsChunkString with ConfigurableMongo {
+trait HelloMongoServices extends BlueEyesServiceBuilder with HttpRequestCombinators with BijectionsChunkString with MongoQueryBuilder {
 
     val helloMongo = service("helloMongo", "0.1") {
       logging { log => context =>
           startup {
-            val mongoConfig = context.config.configMap("mongo")
-            HelloConfig(mongoConfig, mongo(mongoConfig)).future
+            // use MONGOLAB_URI in form: mongodb://username:password@host:port/database
+            val mongoURI = new MongoURI(System.getenv("MONGOLAB_URI"))
+            
+            HelloConfig(new EnvMongo(mongoURI, context.config.configMap("mongo"))).future
           } ->
           request { helloConfig: HelloConfig =>
               path("/mongo") {
                   produce(application/javascript) {
                       get { request =>
-                        /*
-                        {
-                          "foo": "testing"
-                        }
-                        */
                         val s:JString = JString("testing")
                         val f:JField = JField("foo", s)
                         var o:JObject = JObject(List(f))
                         log.info(Printer.pretty(Printer.render(o)))
+
                         helloConfig.database(insert(o).into("ticks"))
 
                         helloConfig.database(selectAll.from("ticks")) map { records =>
@@ -51,6 +54,6 @@ trait HelloMongoServices extends BlueEyesServiceBuilder with HttpRequestCombinat
     }
 }
 
-case class HelloConfig(config: ConfigMap, mongo: Mongo) {
-  val database    = mongo.database(config("databaseName"))
+case class HelloConfig(envMongo: EnvMongo) {
+  val database = envMongo.database(envMongo.mongoURI.getDatabase)
 }
