@@ -17,8 +17,11 @@ trait HelloMongoServices extends BlueEyesServiceBuilder with HttpRequestCombinat
       logging { log => context =>
           startup {
             // use MONGOLAB_URI in form: mongodb://username:password@host:port/database
-            val mongoURI = new MongoURI(System.getenv("MONGOLAB_URI"))
-            
+            val mongolabUri = System.getenv("MONGOLAB_URI")
+            if (mongolabUri==null)
+              throw new Exception("MONGOLAB_URI environment variable was not defined");
+            val mongoURI = new MongoURI(mongolabUri)
+
             HelloConfig(new EnvMongo(mongoURI, context.config.configMap("mongo"))).future
           } ->
           request { helloConfig: HelloConfig =>
