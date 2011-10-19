@@ -4,8 +4,9 @@ import scala.collection.mutable.HashMap
 import scala.math.{abs, min, max}
 import collection.immutable.TreeMap
 
-
-/** Contains letter counts and normalized probabilities (0..1)
+/** This class is initialized with a String containing text to analyze for letter frequency. A normalized probability
+ * distribution is computed; a random number generator can then be used to generate weighted probabilities for generated
+ * text. Class contains letter counts and normalized probabilities (0..1)
  * @author Mike Slinn */
 
 class LetterProbabilities {
@@ -49,7 +50,7 @@ class LetterProbabilities {
     }
   }
 
-  /** Find entry in continuousValues with value<=specified probability.
+  /** Find entry in continuousValues with value>=specified probability.
    * @param probability is forced into the range 0..1
    * @return letter corresponding to the specified probability. */
   def letter(probability:Double):Char = {
