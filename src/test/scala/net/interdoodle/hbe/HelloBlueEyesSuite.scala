@@ -9,6 +9,7 @@ import org.scalatest.SuperSuite
 class HelloBlueEyesSuite extends SuperSuite(
   List(
     new LetterProbabilitiesSuite,
-    new MonkeySuite
+    new MonkeySuite,
+    new HanumanSuite
   )
 ) { }
