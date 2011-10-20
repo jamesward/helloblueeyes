@@ -2,15 +2,23 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
     <head>
+        <script type="text/javascript" src="jquery-1.6.4.js"></script>
+
         <script type="text/javascript">
+
+            var url = "http://localhost:8585/mongo";
+
+            $(document).ready(handleOnload);
 
             function handleOnload()
             {
-                var head = document.getElementsByTagName("head")[0] || document.documentElement;
-                var scriptNode = document.createElement('script');
-                scriptNode.src = "http://hollow-moon-6235.herokuapp.com/mongo";
-                scriptNode.type = "text/javascript";
-                head.appendChild(scriptNode);
+                $.ajax({
+                  url: url,
+                  dataType: 'jsonp',
+                  data: undefined,
+                  jsonpCallback: "parseData",
+                  success: parseResponse
+                });
             }
 
             function parseResponse(data)
@@ -24,8 +32,6 @@
 
                 document.getElementById("fooslist").innerHTML = s;
             }
-
-            document.onload = handleOnload();
 
         </script>
     </head>

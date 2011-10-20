@@ -13,7 +13,7 @@ trait HelloHtmlServices extends BlueEyesServiceBuilder with HttpRequestCombinato
     context =>
       request {
         path("/") {
-          produce(text / html) {
+          produce(text/html) {
             get {
               request =>
                 val content = <html>
