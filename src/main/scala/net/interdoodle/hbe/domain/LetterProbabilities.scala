@@ -15,10 +15,11 @@ class LetterProbabilities {
   protected var totalChars = 0
 
   /** Probability (0..1) that a letter might be randomly generated */
-  var normalizedValues = scala.collection.immutable.TreeMap.empty[Char, Double]
+  // TODO dispense with this intermediate variable
+  var normalizedValues = TreeMap.empty[Char, Double]
 
   /** Running sum of normalized values that a letter might be randomly generated */
-  var continuousValues = scala.collection.immutable.TreeMap.empty[Char, Double]
+  var continuousValues = TreeMap.empty[Char, Double]
 
 
   def add(char:Char) {
@@ -35,14 +36,14 @@ class LetterProbabilities {
   def clear() {
     totalChars = 0
     letterCountMap.clear()
-    normalizedValues = scala.collection.immutable.TreeMap.empty[Char, Double]
-    continuousValues = scala.collection.immutable.TreeMap.empty[Char, Double]
+    normalizedValues = TreeMap.empty[Char, Double]
+    continuousValues = TreeMap.empty[Char, Double]
   }
 
   def computeValues() {
     if (letterCountMap.size==0)
       throw new Error("No characters have been provided")
-    normalizedValues = collection.immutable.TreeMap(
+    normalizedValues = TreeMap(
       (for { (k, v) <- letterCountMap;
          t = (k, v.toDouble / totalChars)
     } yield t).toSeq: _*)
@@ -50,7 +51,7 @@ class LetterProbabilities {
     for (kv <- normalizedValues) {
       sum += kv._2;
       continuousValues += kv._1 -> sum
-      println(kv._1 + "  kv._2=" + kv._2 + "  sum=" + sum)
+      //println(kv._1 + "  kv._2=" + kv._2 + "  sum=" + sum)
     }
   }
 
