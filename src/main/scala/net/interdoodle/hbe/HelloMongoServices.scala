@@ -11,6 +11,10 @@ import blueeyes.json.JsonAST.{JField, JString, JObject, JArray}
 import com.mongodb._
 import blueeyes.persistence.mongo._
 
+
+/** MongoDB service
+ * @author James Ward */
+
 trait HelloMongoServices extends BlueEyesServiceBuilder with HttpRequestCombinators with BijectionsChunkString with MongoQueryBuilder {
 
     val helloMongo = service("helloMongo", "0.1") {

@@ -7,6 +7,11 @@ import blueeyes.core.http.MimeTypes._
 import blueeyes.core.http.combinators.HttpRequestCombinators
 import blueeyes.core.data.{BijectionsChunkString, ByteChunk}
 
+
+/** Sample BlueEyes service, showing all three phases: startup, processing and shutdown
+ * @author James Ward
+ * @author Mike Slinn */
+
 trait HelloStartupShutdownServices extends BlueEyesServiceBuilder with HttpRequestCombinators with BijectionsChunkString {
   val helloStartupShutdown= service("helloStartupShutdown", "0.1") { context =>
     startup {
