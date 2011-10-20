@@ -15,7 +15,8 @@ class HanumanSuite extends FunSuite {
       "0123456789"*2 +
       "`~!@#$%^&*()_-+={[}]|\\\"':;<,>.?/"
     val hanuman = Actor.actorOf(new Hanuman(document, 10)).start()
-    hanuman ! "generatePages"
+    val future = hanuman !!! "generatePages"
+    val result:Any = future.get
     // todo write more tests and Hanuman business logic
   }
 }

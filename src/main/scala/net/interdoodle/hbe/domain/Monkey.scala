@@ -27,6 +27,6 @@ class Monkey (letterProbability:LetterProbabilities) extends Actor {
       val page = generatePage
       self.sender.foreach(_ ! TypingResult(monkeyRef, page))
     }
-    case _ => EventHandler.info(this, "Monkey received unknown message")
+    case _ => EventHandler.info(this, "Monkey received an unknown message")
   }
 }

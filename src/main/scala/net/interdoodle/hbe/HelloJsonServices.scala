@@ -13,23 +13,30 @@ import blueeyes.json.JsonAST._
  * @author Mike Slinn */
 
  trait HelloJsonServices extends BlueEyesServiceBuilder
-with HttpRequestCombinators
-with BijectionsChunkString
-with BijectionsChunkJson {
+  with HttpRequestCombinators
+  with BijectionsChunkString
+  with BijectionsChunkJson {
   val helloJson: HttpService[ByteChunk] = service("helloJson", "0.1") {
     requestLogging {
       logging {
         log =>
           context: HttpServiceContext =>
             request {
-              path("/json") {
+              path("/json/") {
                 jvalue {
                   get {
-                    requestParam: HttpRequest[JValue] =>
+                    requestParam:HttpRequest[JValue] =>
                       val json = JString("Hello World!")
                       val response = HttpResponse[JValue](content = Some(json))
                       log.info(response.toString())
                       Future.sync(response)
+                  }
+                  path('operation/'id) {
+                    get { request =>
+                      val operation = request.parameters('operation)
+                      val id = request.parameters('id)
+                      Future.sync(HttpResponse(content = Some("session ID=" + id + "; operation=" + operation)))
+                    }
                   }
                 }
               }
