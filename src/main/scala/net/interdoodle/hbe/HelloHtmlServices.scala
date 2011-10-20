@@ -8,6 +8,9 @@ import blueeyes.core.http.combinators.HttpRequestCombinators
 import blueeyes.core.data.BijectionsChunkString
 
 
+/** Simple HTML service
+ * @author James Ward */
+
 trait HelloHtmlServices extends BlueEyesServiceBuilder with HttpRequestCombinators with BijectionsChunkString {
   val helloHtml = service("helloHtml", "0.1") {
     context =>

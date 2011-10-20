@@ -8,7 +8,11 @@ import blueeyes.core.http.combinators.HttpRequestCombinators
 import blueeyes.core.service.{HttpService, HttpServiceContext}
 import blueeyes.json.JsonAST._
 
-trait HelloJsonServices extends BlueEyesServiceBuilder
+
+/** JSON service
+ * @author Mike Slinn */
+
+ trait HelloJsonServices extends BlueEyesServiceBuilder
 with HttpRequestCombinators
 with BijectionsChunkString
 with BijectionsChunkJson {

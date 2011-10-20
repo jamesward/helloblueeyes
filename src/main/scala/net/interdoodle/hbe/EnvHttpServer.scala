@@ -4,15 +4,10 @@ import blueeyes.core.service.HttpServer
 import net.lag.configgy.Configgy
 import java.util.concurrent.CountDownLatch
 import util.Properties
-;
+
 
 /**
- * Created by IntelliJ IDEA.
- * User: jamesw
- * Date: 10/17/11
- * Time: 9:28 PM
- * To change this template use File | Settings | File Templates.
- */
+ * @author James Ward */
 
 trait EnvHttpServer extends HttpServer { self =>
 
