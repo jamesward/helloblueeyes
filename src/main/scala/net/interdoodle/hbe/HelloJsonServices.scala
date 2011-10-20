@@ -30,7 +30,13 @@ import blueeyes.json.JsonAST._
                       val response = HttpResponse[JValue](content = Some(json))
                       log.info(response.toString())
                       Future.sync(response)
-                  }
+                  } ~
+                  path('operation) {
+                    get { request =>
+                      val operation = request.parameters('operation)
+                      Future.sync(HttpResponse(content = Some("operation=" + operation)))
+                    }
+                  } ~
                   path('operation/'id) {
                     get { request =>
                       val operation = request.parameters('operation)
