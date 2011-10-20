@@ -1,6 +1,6 @@
 package net.interdoodle.hbe
 
-import net.interdoodle.hbe.domain.LetterProbabilities
+import domain.{Monkey, LetterProbabilities}
 import org.scalatest.FunSuite
 
 
@@ -8,7 +8,18 @@ import org.scalatest.FunSuite
 class HelloBlueEyesSuite extends FunSuite {
   var lps:LetterProbabilities = _
 
-  test("default constructor values") {
+  test("generatePage") {
+    val document = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"*5 +
+      "abcdefghijklmnopqrstuvwxyz"*25 +
+      "0123456789"*2 +
+      "`~!@#$%^&*()_-+={[}]|\\\"':;<,>.?/"
+    val monkey = new Monkey(document)
+    assert(monkey.letterProbability.size==94)
+    val page = monkey.generatePage
+  }
+
+
+  test("LetterProbabilities") {
     try {
       lps = new LetterProbabilities()
 

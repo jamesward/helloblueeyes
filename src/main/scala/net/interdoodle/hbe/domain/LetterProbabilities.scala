@@ -12,6 +12,7 @@ import collection.immutable.TreeMap
 class LetterProbabilities {
   /** Count of each letter added so far */
   protected val letterCountMap = HashMap.empty[Char, Int]
+  protected var totalChars = 0
 
   /** Probability (0..1) that a letter might be randomly generated */
   var normalizedValues = scala.collection.immutable.TreeMap.empty[Char, Double]
@@ -23,6 +24,7 @@ class LetterProbabilities {
   def add(char:Char) {
     val letterCount:Int = letterCountMap.getOrElse(char, 0)
     letterCountMap += char -> (letterCount + 1)
+    totalChars += 1
   }
 
   /** Update the probabilities for each letter in the string */
@@ -31,6 +33,7 @@ class LetterProbabilities {
   }
 
   def clear() {
+    totalChars = 0
     letterCountMap.clear()
     normalizedValues = scala.collection.immutable.TreeMap.empty[Char, Double]
     continuousValues = scala.collection.immutable.TreeMap.empty[Char, Double]
@@ -41,12 +44,13 @@ class LetterProbabilities {
       throw new Error("No characters have been provided")
     normalizedValues = collection.immutable.TreeMap(
       (for { (k, v) <- letterCountMap;
-         t = (k, v.toDouble / letterCountMap.size)
+         t = (k, v.toDouble / totalChars)
     } yield t).toSeq: _*)
     var sum = 0.0
     for (kv <- normalizedValues) {
       sum += kv._2;
       continuousValues += kv._1 -> sum
+      println(kv._1 + "  kv._2=" + kv._2 + "  sum=" + sum)
     }
   }
 
@@ -57,7 +61,7 @@ class LetterProbabilities {
     if (letterCountMap.size==0)
       throw new Error("No characters have been provided")
     if (continuousValues.size==0)
-      throw new Error("No letter probabilities have been computer")
+      throw new Error("No letter probabilities have been computed")
     val prob = min(1.0, max(0.0, probability))
     val (ltMap, gteMap) = continuousValues.partition(kv => (kv._2<prob))
     if (gteMap.size==0)
