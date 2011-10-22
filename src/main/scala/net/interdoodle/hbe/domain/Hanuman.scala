@@ -38,12 +38,20 @@ import akka.actor.{Actor, ActorRef}
         busyMonkeyActorRefs = monkeyActorRef :: busyMonkeyActorRefs
       }
     }
+    case "status" => {
+      EventHandler.info(this, "Hanuman received 'status' request")
+      if (busyMonkeyActorRefs.isEmpty)
+        "" + busyMonkeyActorRefs.size + " monkeys are still typing"
+      else
+        "Monkeys are all finished"
+    }
     case TypingResult(monkeyActorRef, text) => {
       println(monkeyActorRef.id + " returned " + text)
       busyMonkeyActorRefs = remove(monkeyActorRef, busyMonkeyActorRefs)
-      println(busyMonkeyActorRefs.length)
       if (busyMonkeyActorRefs.isEmpty)
-        println("Monkeys are all finished typing!")
+        "Monkeys are all finished typing!"
+      else
+        "" + busyMonkeyActorRefs.length + " monkeys are still typing"
     }
     case _ => {
       EventHandler.info(this, "Hanuman received an unknown message")

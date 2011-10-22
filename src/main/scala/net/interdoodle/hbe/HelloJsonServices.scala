@@ -3,19 +3,27 @@ package net.interdoodle.hbe
 import blueeyes._
 import blueeyes.concurrent.Future
 import blueeyes.core.data.{BijectionsChunkJson, BijectionsChunkString, ByteChunk}
-import blueeyes.core.http.{HttpRequest, HttpResponse}
+import blueeyes.core.http.{HttpRequest, HttpResponse, HttpStatus}
+import blueeyes.core.http.{HttpCookie, HttpDateTime}
 import blueeyes.core.http.combinators.HttpRequestCombinators
 import blueeyes.core.service.{HttpService, HttpServiceContext}
 import blueeyes.json.JsonAST._
+import net.interdoodle.hbe.domain.Hanuman
+import scala.collection.mutable.HashMap
+import java.util.UUID
+import akka.actor.{Actor, ActorRef}
 
 
 /** JSON service
  * @author Mike Slinn */
 
- trait HelloJsonServices extends BlueEyesServiceBuilder
-  with HttpRequestCombinators
-  with BijectionsChunkString
-  with BijectionsChunkJson {
+  trait HelloJsonServices extends BlueEyesServiceBuilder
+    with HttpRequestCombinators
+    with BijectionsChunkString
+    with BijectionsChunkJson {
+
+  val sessions = new HashMap[String, Option[ActorRef]]
+
   val helloJson: HttpService[ByteChunk] = service("helloJson", "0.1") {
     requestLogging {
       logging {
@@ -34,14 +42,47 @@ import blueeyes.json.JsonAST._
                   path('operation) {
                     get { request =>
                       val operation = request.parameters('operation)
-                      Future.sync(HttpResponse(content = Some("operation=" + operation)))
+                      if (operation=="newSession") {
+                        val sessionID = UUID.randomUUID().toString
+                        sessions += sessionID -> None
+                        Future.sync(HttpResponse(
+                          /*headers = HttpHeaders.Empty + sessionCookie(sessionID),*/
+                          content = Some(sessionID)))
+                      } else {
+                        val msg = "The only operation that can be without a sessionID is newSession. You specified '" + operation + "'"
+                        Future.sync(HttpResponse(status=HttpStatus(400, msg),
+                                                 content = Some(msg)))
+                      }
                     }
                   } ~
                   path('operation/'id) {
                     get { request =>
+                      val operation = request.parameters('operation).toString
+                      val sessionID = request.parameters('id).toString
+                      val session = sessions.getOrElse(sessionID, None)
+                      Future.sync(HttpResponse(
+                        /*headers = HttpHeaders.Empty + sessionCookie(sessionID),*/
+                        content = if (session==null) {
+                          Some("Session with ID " + sessionID + " does not exist")
+                        } else {
+                          Some(doCommand(operation, sessions, sessionID))
+                        }
+                      ))
+                    }
+                  } ~
+                  path('operation/'id/'param) {
+                    get { request =>
                       val operation = request.parameters('operation)
-                      val id = request.parameters('id)
-                      Future.sync(HttpResponse(content = Some("session ID=" + id + "; operation=" + operation)))
+                      val sessionID = request.parameters('id)
+                      val param = request.parameters('param)
+                      val session = sessions.getOrElse(sessionID, None)
+                      Future.sync(HttpResponse(
+                        /*headers = HttpHeaders.Empty + sessionCookie(sessionID),*/
+                        content = if (session==null)
+                          Some("Session with ID " + sessionID + " does not exist")
+                        else
+                          Some("session ID=" + sessionID + "; operation: '" + operation + "'"))
+                      )
                     }
                   }
                 }
@@ -50,4 +91,47 @@ import blueeyes.json.JsonAST._
       }
     }
   }
+
+  private def doCommand(command:String, sessions:HashMap[String, Option[ActorRef]], key:String):String = {
+    command match {
+      case "run" =>
+        val document = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"*5 +
+          "abcdefghijklmnopqrstuvwxyz"*25 +
+          "0123456789"*2 +
+          "`~!@#$%^&*()_-+={[}]|\\\"':;<,>.?/"
+        val hanumanRef = Actor.actorOf(new Hanuman(document, 10)).start()
+        sessions += key -> Some(hanumanRef)
+        /*akka.actor.Actor.spawn {
+          hanumanRef ! "generatePages"
+          def receive = {
+            case "status" => {
+              println("status response obtained from lightweight actor thread")
+            }
+          }
+        }*/
+        "Updated session with new Hanuman instance " + hanumanRef.uuid
+
+      case "status" =>
+        val hanumanRef = sessions.get(key)
+        //hanumanRef ! "status"
+        //val result = hanuman.get
+        "Not implemented yet"
+
+      case _ =>
+        command + "is an unknown command"
+    }
+  }
+
+   /** Not sure we need cookies */
+  /*private def sessionCookie(sessionID:String) = {
+    val cookie = new HttpCookie {
+      def name = "SessionID"
+      def cookieValue = sessionID
+      def expires = Some(HttpDateTime.parseHttpDateTimes("MON, 01-JAN-2001 00:00:00 UTC"))
+      def domain = Option("")
+      def path = Option("")
+      // TODO add "; HttpOnly"
+    }
+    `Set-Cookie`(cookie :: Nil)
+  }*/
 }

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Test HelloBlueEyes JSON Service
+
+function removeQuotes {
+   echo "$*"|sed -s "s/^\(\(\"\(.*\)\"\)\|\('\(.*\)'\)\)\$/\\3\\5/g"
+}
+
+SID=$(curl -sS --header "Content-Type:application/json" 'http://localhost:8585/json/newSession')
+SESSION_ID=$(removeQuotes $SID)
+echo "HelloBlueEyes session ID is $SESSION_ID"
+
+MSG=$(curl -sS --header "Content-Type:application/json" "http://localhost:8585/json/run/$SESSION_ID")
+echo "$(removeQuotes $MSG)"
+
+# Causes https://github.com/jdegoes/blueeyes/issues/29
+#MSG=$(curl -sSv --header "Content-Type:application/json" --data-urlencode "document=Of course you realize that this means war" "http://localhost:8585/json/blah/$SESSION_ID")
+#echo "$(removeQuotes $MSG)"
