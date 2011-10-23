@@ -37,52 +37,41 @@ import net.lag.logging.Logger
                     requestParam:HttpRequest[JValue] =>
                       reqHello(log)
                   } ~
-              path('operation) {
-                get { request =>
-                  val operation = request.parameters('operation)
-                  if (operation=="newSession") {
-                    val sessionID = UUID.randomUUID().toString
-                    sessions += sessionID -> None
-                    Future.sync(HttpResponse(
-                      /*headers = HttpHeaders.Empty + sessionCookie(sessionID),*/
-                      content = Some(sessionID)))
-                  } else {
-                    val msg = "The only operation that can be without a sessionID is newSession. You specified '" + operation + "'"
-                    Future.sync(HttpResponse(status=HttpStatus(400, msg),
-                      content = Some(msg)))
-                  }
-                }
-              } ~
-              path('operation/'id) {
-                get { request =>
-                  val operation = request.parameters('operation).toString
-                  val sessionID = request.parameters('id).toString
-                  val session = sessions.getOrElse(sessionID, None)
-                  Future.sync(HttpResponse(
-                    /*headers = HttpHeaders.Empty + sessionCookie(sessionID),*/
-                    content = if (session==null) {
-                      Some("Session with ID " + sessionID + " does not exist")
-                    } else {
-                      Some(doCommand(operation, sessions, sessionID))
+                  path('operation) {
+                    get { request =>
+                      reqOperation(log, request)
                     }
-                  ))
-                }
-              } ~
-              path('operation/'id/'param) {
-                get { request =>
-                  val operation = request.parameters('operation)
-                  val sessionID = request.parameters('id)
-                  val param = request.parameters('param)
-                  val session = sessions.getOrElse(sessionID, None)
-                  Future.sync(HttpResponse(
-                    /*headers = HttpHeaders.Empty + sessionCookie(sessionID),*/
-                    content = if (session==null)
-                      Some("Session with ID " + sessionID + " does not exist")
-                    else
-                      Some("session ID=" + sessionID + "; operation: '" + operation + "'"))
-                  )
-                }
-              }
+                  } ~
+                  path('operation/'id) {
+                    get { request =>
+                      val operation = request.parameters('operation).toString
+                      val sessionID = request.parameters('id).toString
+                      val session = sessions.getOrElse(sessionID, None)
+                      Future.sync(HttpResponse(
+                        /*headers = HttpHeaders.Empty + sessionCookie(sessionID),*/
+                        content = if (session==null) {
+                          Some("Session with ID " + sessionID + " does not exist")
+                        } else {
+                          Some(doCommand(operation, sessions, sessionID))
+                        }
+                      ))
+                    }
+                  } ~
+                  path('operation/'id/'param) {
+                    get { request =>
+                      val operation = request.parameters('operation)
+                      val sessionID = request.parameters('id)
+                      val param = request.parameters('param)
+                      val session = sessions.getOrElse(sessionID, None)
+                      Future.sync(HttpResponse(
+                        /*headers = HttpHeaders.Empty + sessionCookie(sessionID),*/
+                        content = if (session==null)
+                          Some("Session with ID " + sessionID + " does not exist")
+                        else
+                          Some("session ID=" + sessionID + "; operation: '" + operation + "'"))
+                      )
+                    }
+                  }
             }
           }
         }
@@ -95,6 +84,20 @@ import net.lag.logging.Logger
     val response = HttpResponse[JValue](content = Some(json))
     log.info(response.toString())
     Future.sync(response)
+  }
+
+  private def reqOperation[T, S](log:Logger, request:HttpRequest[T]):Future[HttpResponse[JValue]] = {
+    val operation = request.parameters('operation)
+    if (operation=="newSession") {
+      val sessionID = UUID.randomUUID().toString
+      sessions += sessionID -> None
+      Future.sync(HttpResponse(
+        /*headers = HttpHeaders.Empty + sessionCookie(sessionID),*/
+        content = Some(sessionID)))
+    } else {
+      val msg = "The only operation that can be without a sessionID is newSession. You specified '" + operation + "'"
+      Future.sync(HttpResponse(status=HttpStatus(400, msg), content = Some(msg)))
+    }
   }
 
   private def doCommand(command:String, sessions:HashMap[String, Option[ActorRef]], key:String):String = {
