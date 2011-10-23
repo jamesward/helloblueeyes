@@ -6,6 +6,9 @@ function removeQuotes {
    echo "$*"|sed -s "s/^\(\(\"\(.*\)\"\)\|\('\(.*\)'\)\)\$/\\3\\5/g"
 }
 
+HELLO=$(curl -sS --header "Content-Type:application/json" 'http://localhost:8585/json/')
+echo "Should say hello: $HELLO"
+
 SID=$(curl -sS --header "Content-Type:application/json" 'http://localhost:8585/json/newSession')
 SESSION_ID=$(removeQuotes $SID)
 echo "HelloBlueEyes session ID is $SESSION_ID"

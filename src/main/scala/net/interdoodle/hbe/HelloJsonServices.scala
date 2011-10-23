@@ -6,12 +6,13 @@ import blueeyes.core.data.{BijectionsChunkJson, BijectionsChunkString, ByteChunk
 import blueeyes.core.http.{HttpRequest, HttpResponse, HttpStatus}
 import blueeyes.core.http.{HttpCookie, HttpDateTime}
 import blueeyes.core.http.combinators.HttpRequestCombinators
-import blueeyes.core.service.{HttpService, HttpServiceContext}
 import blueeyes.json.JsonAST._
+import core.service._
 import net.interdoodle.hbe.domain.Hanuman
 import scala.collection.mutable.HashMap
 import java.util.UUID
 import akka.actor.{Actor, ActorRef}
+import net.lag.logging.Logger
 
 
 /** JSON service
@@ -34,62 +35,66 @@ import akka.actor.{Actor, ActorRef}
                 jvalue {
                   get {
                     requestParam:HttpRequest[JValue] =>
-                      val json = JString("Hello World!")
-                      val response = HttpResponse[JValue](content = Some(json))
-                      log.info(response.toString())
-                      Future.sync(response)
+                      reqHello(log)
                   } ~
-                  path('operation) {
-                    get { request =>
-                      val operation = request.parameters('operation)
-                      if (operation=="newSession") {
-                        val sessionID = UUID.randomUUID().toString
-                        sessions += sessionID -> None
-                        Future.sync(HttpResponse(
-                          /*headers = HttpHeaders.Empty + sessionCookie(sessionID),*/
-                          content = Some(sessionID)))
-                      } else {
-                        val msg = "The only operation that can be without a sessionID is newSession. You specified '" + operation + "'"
-                        Future.sync(HttpResponse(status=HttpStatus(400, msg),
-                                                 content = Some(msg)))
-                      }
-                    }
-                  } ~
-                  path('operation/'id) {
-                    get { request =>
-                      val operation = request.parameters('operation).toString
-                      val sessionID = request.parameters('id).toString
-                      val session = sessions.getOrElse(sessionID, None)
-                      Future.sync(HttpResponse(
-                        /*headers = HttpHeaders.Empty + sessionCookie(sessionID),*/
-                        content = if (session==null) {
-                          Some("Session with ID " + sessionID + " does not exist")
-                        } else {
-                          Some(doCommand(operation, sessions, sessionID))
-                        }
-                      ))
-                    }
-                  } ~
-                  path('operation/'id/'param) {
-                    get { request =>
-                      val operation = request.parameters('operation)
-                      val sessionID = request.parameters('id)
-                      val param = request.parameters('param)
-                      val session = sessions.getOrElse(sessionID, None)
-                      Future.sync(HttpResponse(
-                        /*headers = HttpHeaders.Empty + sessionCookie(sessionID),*/
-                        content = if (session==null)
-                          Some("Session with ID " + sessionID + " does not exist")
-                        else
-                          Some("session ID=" + sessionID + "; operation: '" + operation + "'"))
-                      )
-                    }
+              path('operation) {
+                get { request =>
+                  val operation = request.parameters('operation)
+                  if (operation=="newSession") {
+                    val sessionID = UUID.randomUUID().toString
+                    sessions += sessionID -> None
+                    Future.sync(HttpResponse(
+                      /*headers = HttpHeaders.Empty + sessionCookie(sessionID),*/
+                      content = Some(sessionID)))
+                  } else {
+                    val msg = "The only operation that can be without a sessionID is newSession. You specified '" + operation + "'"
+                    Future.sync(HttpResponse(status=HttpStatus(400, msg),
+                      content = Some(msg)))
                   }
+                }
+              } ~
+              path('operation/'id) {
+                get { request =>
+                  val operation = request.parameters('operation).toString
+                  val sessionID = request.parameters('id).toString
+                  val session = sessions.getOrElse(sessionID, None)
+                  Future.sync(HttpResponse(
+                    /*headers = HttpHeaders.Empty + sessionCookie(sessionID),*/
+                    content = if (session==null) {
+                      Some("Session with ID " + sessionID + " does not exist")
+                    } else {
+                      Some(doCommand(operation, sessions, sessionID))
+                    }
+                  ))
+                }
+              } ~
+              path('operation/'id/'param) {
+                get { request =>
+                  val operation = request.parameters('operation)
+                  val sessionID = request.parameters('id)
+                  val param = request.parameters('param)
+                  val session = sessions.getOrElse(sessionID, None)
+                  Future.sync(HttpResponse(
+                    /*headers = HttpHeaders.Empty + sessionCookie(sessionID),*/
+                    content = if (session==null)
+                      Some("Session with ID " + sessionID + " does not exist")
+                    else
+                      Some("session ID=" + sessionID + "; operation: '" + operation + "'"))
+                  )
                 }
               }
             }
+          }
+        }
       }
     }
+  }
+
+  private def reqHello[T, S](log:Logger) = {
+    val json = JString("Hello, world, from the JSON service!")
+    val response = HttpResponse[JValue](content = Some(json))
+    log.info(response.toString())
+    Future.sync(response)
   }
 
   private def doCommand(command:String, sessions:HashMap[String, Option[ActorRef]], key:String):String = {
