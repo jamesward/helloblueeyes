@@ -6,15 +6,18 @@ function removeQuotes {
    echo "$*"|sed -s "s/^\(\(\"\(.*\)\"\)\|\('\(.*\)'\)\)\$/\\3\\5/g"
 }
 
-HELLO=$(curl -sS --header "Content-Type:application/json" 'http://localhost:8585/json/')
+HELLO=$(curl -sSf --header "Content-Type:application/json" 'http://localhost:8585/json/')
 echo "Should say hello: $HELLO"
 
-SID=$(curl -sS --header "Content-Type:application/json" 'http://localhost:8585/json/newSession')
-SESSION_ID=$(removeQuotes $SID)
-echo "HelloBlueEyes session ID is $SESSION_ID"
+echo -en "\nShould report return code 22 because of HTTP status 404: "
+BAD=$(curl -sSf --header "Content-Type:application/json" 'http://localhost:8585/json/badURI/x/y/z/')
 
-MSG=$(curl -sS --header "Content-Type:application/json" "http://localhost:8585/json/run/$SESSION_ID")
-echo "$(removeQuotes $MSG)"
+SID=$(curl -sSf --header "Content-Type:application/json" 'http://localhost:8585/json/newSession')
+SESSION_ID=$(removeQuotes $SID)
+echo -e "\nHelloBlueEyes session ID is $SESSION_ID"
+
+MSG=$(curl -sSf --header "Content-Type:application/json" "http://localhost:8585/json/run/$SESSION_ID")
+echo -e "\n$(removeQuotes $MSG)"
 
 # Causes https://github.com/jdegoes/blueeyes/issues/29
 #MSG=$(curl -sSv --header "Content-Type:application/json" --data-urlencode "document=Of course you realize that this means war" "http://localhost:8585/json/blah/$SESSION_ID")

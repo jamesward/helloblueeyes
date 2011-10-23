@@ -4,8 +4,8 @@ import blueeyes._
 import blueeyes.concurrent.Future
 import blueeyes.core.data.{BijectionsChunkJson, BijectionsChunkString, ByteChunk}
 import blueeyes.core.http.{HttpRequest, HttpResponse, HttpStatus}
-import blueeyes.core.http.{HttpCookie, HttpDateTime}
 import blueeyes.core.http.combinators.HttpRequestCombinators
+import blueeyes.core.http.HttpStatusCodes
 import blueeyes.json.JsonAST._
 import core.service._
 import net.interdoodle.hbe.domain.Hanuman
@@ -42,10 +42,11 @@ import net.lag.logging.Logger
                   } ~
                   path('operation/'id/'param) {
                     get { request => reqDoCommandParam(log, request) }
-                  }
+                  } ~
+                  orFail(HttpStatusCodes.NotFound, "No handler found that could handle this request.") // return HTTP status 404
+                }
+              }
             }
-          }
-        }
       }
     }
   }
@@ -77,12 +78,11 @@ import net.lag.logging.Logger
     val session = sessions.getOrElse(sessionID, None)
     Future.sync(HttpResponse(
       /*headers = HttpHeaders.Empty + sessionCookie(sessionID),*/
-      content = if (session==null) {
-        Some("Session with ID " + sessionID + " does not exist")
-      } else {
-        Some(doCommand(operation, sessions, sessionID))
-      }
-    ))
+      content = Some(if (session==null)
+        "Session with ID " + sessionID + " does not exist"
+      else
+        doCommand(operation, sessions, sessionID)
+    )))
   }
 
   private def reqDoCommandParam[T, S](log:Logger, request:HttpRequest[T]):Future[HttpResponse[JValue]] = {
