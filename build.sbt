@@ -9,14 +9,17 @@ version := "1.0"
 scalaVersion := "2.9.1"
 
 resolvers ++= Seq(
+  "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases",
   "Sonatype"    at "http://nexus.scala-tools.org/content/repositories/public",
   "Scala Tools" at "http://scala-tools.org/repo-releases/",
   "JBoss"       at "http://repository.jboss.org/nexus/content/groups/public/",
-  "Akka"        at "http://akka.io/repository/",
   "GuiceyFruit" at "http://guiceyfruit.googlecode.com/svn/repo/releases/"
 )
 
 libraryDependencies ++= Seq(
+  "se.scalablesolutions.akka" % "akka-actor" % "1.2",
+  "se.scalablesolutions.akka" % "akka-stm" % "1.2",
+  "se.scalablesolutions.akka" % "akka-typed-actor" % "1.2",
   "com.reportgrid" % "blueeyes_2.9.1" % "latest.integration" % "compile",
   "org.scalatest" %% "scalatest" % "1.6.1" % "test"
 )
