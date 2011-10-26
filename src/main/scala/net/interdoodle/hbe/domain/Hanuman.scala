@@ -3,15 +3,17 @@ package net.interdoodle.hbe.domain
 import collection.mutable.LinkedList
 import akka.event.EventHandler
 import akka.actor.{Actor, ActorRef}
+import akka.stm.Ref
 
 
 /** Monkey god (supervisor) creates many Akka Actor references (to type Monkey) with identical probability distributions.
  * Dispatches requests to generate semi-random text.
  * @author Mike Slinn */
 
- class Hanuman (corpus:String, number:Int=100) extends Actor {
+ class Hanuman (corpus:String, number:Int=100, simulationResultRef:Ref[SimulationResult]) extends Actor {
   var busyMonkeyActorRefs = List[ActorRef]()
   var monkeyActorRefs = List[ActorRef]()
+  val simulationResult = simulationResultRef.get
 
   val letterProbability = new LetterProbabilities()
   letterProbability.add(corpus)
@@ -38,21 +40,22 @@ import akka.actor.{Actor, ActorRef}
         busyMonkeyActorRefs = monkeyActorRef :: busyMonkeyActorRefs
       }
     }
-    case "status" => {
-      EventHandler.info(this, "Hanuman received 'status' request")
-      if (busyMonkeyActorRefs.isEmpty)
-        "" + busyMonkeyActorRefs.size + " monkeys are still typing"
-      else
-        "Monkeys are all finished"
-    }
-    case TypingResult(monkeyActorRef, text) => {
+
+    case TypingResult(monkeyActorRef, monkey, text) => {
       println(monkeyActorRef.id + " returned " + text)
+      // TODO add last monkey's results to simulationResult.list
       busyMonkeyActorRefs = remove(monkeyActorRef, busyMonkeyActorRefs)
-      if (busyMonkeyActorRefs.isEmpty)
-        "Monkeys are all finished typing!"
-      else
-        "" + busyMonkeyActorRefs.length + " monkeys are still typing"
+      if (busyMonkeyActorRefs.isEmpty) {
+        simulationResult.msg = "Monkeys are all finished"
+        simulationResult.complete = true
+        for (monkeyRef <- monkeyActorRefs) {
+          monkeyRef.stop
+        }
+      } else {
+        simulationResult.msg = "" + busyMonkeyActorRefs.length + " monkeys are still typing"
+      }
     }
+
     case _ => {
       EventHandler.info(this, "Hanuman received an unknown message")
     }

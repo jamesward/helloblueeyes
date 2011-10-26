@@ -8,10 +8,11 @@ import blueeyes.core.http.combinators.HttpRequestCombinators
 import blueeyes.core.http.HttpStatusCodes
 import blueeyes.json.JsonAST._
 import core.service._
-import net.interdoodle.hbe.domain.Hanuman
+import net.interdoodle.hbe.domain.{Hanuman, SimulationResult}
 import scala.collection.mutable.HashMap
 import java.util.UUID
 import akka.actor.{Actor, ActorRef}
+import akka.stm.Ref
 import net.lag.logging.Logger
 
 
@@ -20,9 +21,9 @@ import net.lag.logging.Logger
 
   trait HelloJsonServices extends BlueEyesServiceBuilder
     with HttpRequestCombinators
-    with BijectionsChunkString
-    with BijectionsChunkJson {
-
+with BijectionsChunkString
+with BijectionsChunkJson {
+  val simulationResult:SimulationResult = new SimulationResult(Nil)
   val sessions = new HashMap[String, Option[ActorRef]]
 
   val helloJson: HttpService[ByteChunk] = service("helloJson", "0.1") {
@@ -98,7 +99,6 @@ import net.lag.logging.Logger
         Some("session ID=" + sessionID + "; operation: '" + operation + "'"))
     )
   }
-
   private def doCommand(command:String, sessions:HashMap[String, Option[ActorRef]], key:String):String = {
     command match {
       case "run" =>
@@ -106,23 +106,14 @@ import net.lag.logging.Logger
           "abcdefghijklmnopqrstuvwxyz"*25 +
           "0123456789"*2 +
           "`~!@#$%^&*()_-+={[}]|\\\"':;<,>.?/"
-        val hanumanRef = Actor.actorOf(new Hanuman(document, 10)).start()
+        val hanumanRef = Actor.actorOf(new Hanuman(document, 10, Ref(simulationResult))).start()
         sessions += key -> Some(hanumanRef)
-        /*akka.actor.Actor.spawn {
-          hanumanRef ! "generatePages"
-          def receive = {
-            case "status" => {
-              println("status response obtained from lightweight actor thread")
-            }
-          }
-        }*/
         "Updated session with new Hanuman instance " + hanumanRef.uuid
 
       case "status" =>
-        val hanumanRef = sessions.get(key)
-        //hanumanRef ! "status"
-        //val result = hanuman.get
-        "Not implemented yet"
+        // TODO return simulationResult object in JSON format to client
+        simulationResult.msg
+        ""
 
       case _ =>
         command + "is an unknown command"
