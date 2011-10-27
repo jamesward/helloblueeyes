@@ -1,4 +1,4 @@
-package net.interdoodle.hbe.domain
+package net.interdoodle.hbe.message
 
 import akka.actor.ActorRef
 

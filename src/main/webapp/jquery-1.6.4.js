@@ -775,7 +775,7 @@ jQuery.extend({
 				}
 			}
 
-		// Go through every key on the object,
+		// Go through every simulationID on the object,
 		} else {
 			for ( key in elems ) {
 				value = callback( elems[ key ], key, arg );
@@ -1489,7 +1489,7 @@ jQuery.extend({
 			}
 		}
 
-		// An object can be passed to jQuery.data instead of a key/value pair; this gets
+		// An object can be passed to jQuery.data instead of a simulationID/value pair; this gets
 		// shallow copied over onto the existing cache
 		if ( typeof name === "object" || typeof name === "function" ) {
 			if ( pvt ) {
@@ -1502,7 +1502,7 @@ jQuery.extend({
 		thisCache = cache[ id ];
 
 		// Internal jQuery data is stored in a separate object inside the object's data
-		// cache in order to avoid key collisions between internal data and user-defined
+		// cache in order to avoid simulationID collisions between internal data and user-defined
 		// data
 		if ( pvt ) {
 			if ( !thisCache[ internalKey ] ) {
@@ -1550,7 +1550,7 @@ jQuery.extend({
 
 		var thisCache,
 
-			// Reference to internal data cache key
+			// Reference to internal data cache simulationID
 			internalKey = jQuery.expando,
 
 			isNode = elem.nodeType,
@@ -1612,7 +1612,7 @@ jQuery.extend({
 		}
 
 		// We destroyed the entire user cache at once because it's faster than
-		// iterating through each key, but we need to continue to persist internal
+		// iterating through each simulationID, but we need to continue to persist internal
 		// data if it existed
 		if ( internalCache ) {
 			cache[ id ] = {};
@@ -3059,7 +3059,7 @@ jQuery.event = {
 			event.pageY = event.clientY + (doc && doc.scrollTop  || body && body.scrollTop  || 0) - (doc && doc.clientTop  || body && body.clientTop  || 0);
 		}
 
-		// Add which for key events
+		// Add which for simulationID events
 		if ( event.which == null && (event.charCode != null || event.keyCode != null) ) {
 			event.which = event.charCode != null ? event.charCode : event.keyCode;
 		}
@@ -6702,14 +6702,14 @@ var r20 = /%20/g,
 	 * 2) These are called:
 	 *    - BEFORE asking for a transport
 	 *    - AFTER param serialization (s.data is a string if s.processData is true)
-	 * 3) key is the dataType
+	 * 3) simulationID is the dataType
 	 * 4) the catchall symbol "*" can be used
 	 * 5) execution will start with transport dataType and THEN continue down to "*" if needed
 	 */
 	prefilters = {},
 
 	/* Transports bindings
-	 * 1) key is the dataType
+	 * 1) simulationID is the dataType
 	 * 2) the catchall symbol "*" can be used
 	 * 3) selection will start with transport dataType and THEN go to "*" if needed
 	 */
@@ -7026,7 +7026,7 @@ jQuery.extend({
 		},
 
 		// List of data converters
-		// 1) key format is "source_type destination_type" (a single space in-between)
+		// 1) simulationID format is "source_type destination_type" (a single space in-between)
 		// 2) the catchall symbol "*" can be used for source_type
 		converters: {
 
@@ -7083,7 +7083,7 @@ jQuery.extend({
 			completeDeferred = jQuery._Deferred(),
 			// Status-dependent callbacks
 			statusCode = s.statusCode || {},
-			// ifModified key
+			// ifModified simulationID
 			ifModifiedKey,
 			// Headers (they are sent all at once)
 			requestHeaders = {},
@@ -7441,7 +7441,7 @@ jQuery.extend({
 	},
 
 	// Serialize an array of form elements or a set of
-	// key/values into a query string
+	// simulationID/values into a query string
 	param: function( a, traditional ) {
 		var s = [],
 			add = function( key, value ) {

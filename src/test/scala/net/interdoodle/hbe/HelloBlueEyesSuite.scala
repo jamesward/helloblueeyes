@@ -10,6 +10,6 @@ class HelloBlueEyesSuite extends SuperSuite(
   List(
     new LetterProbabilitiesSuite,
     new MonkeySuite,
-    new HanumanSuite
+    new MonkeyVisorSuite
   )
 ) { }
