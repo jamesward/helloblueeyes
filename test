@@ -12,13 +12,13 @@ echo "Should say hello: $HELLO"
 echo -en "\nShould report return code 22 because of HTTP status 404: "
 BAD=$(curl -sSf --header "Content-Type:application/json" 'http://localhost:8585/json/badURI/x/y/z/')
 
-SID=$(curl -sSf --header "Content-Type:application/json" 'http://localhost:8585/json/newSession')
-SESSION_ID=$(removeQuotes $SID)
-echo -e "\nHelloBlueEyes session ID is $SESSION_ID"
+SID=$(curl -sSf --header "Content-Type:application/json" 'http://localhost:8585/json/newSimulation')
+SIMULATION_ID=$(removeQuotes $SID)
+echo -e "\nHelloBlueEyes simulation ID is $SIMULATION_ID"
 
-MSG=$(curl -sSf --header "Content-Type:application/json" "http://localhost:8585/json/run/$SESSION_ID")
+MSG=$(curl -sSf --header "Content-Type:application/json" "http://localhost:8585/json/run/$SIMULATION_ID")
 echo -e "\n$(removeQuotes $MSG)"
 
 # Causes https://github.com/jdegoes/blueeyes/issues/29
-#MSG=$(curl -sSv --header "Content-Type:application/json" --data-urlencode "document=Of course you realize that this means war" "http://localhost:8585/json/blah/$SESSION_ID")
+#MSG=$(curl -sSv --header "Content-Type:application/json" --data-urlencode "document=Of course you realize that this means war" "http://localhost:8585/json/blah/$SIMULATION_ID")
 #echo "$(removeQuotes $MSG)"
