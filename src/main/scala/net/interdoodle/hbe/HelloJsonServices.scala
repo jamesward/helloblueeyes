@@ -24,13 +24,19 @@ trait HelloJsonServices extends BlueEyesServiceBuilder
   with BijectionsChunkString
   with BijectionsChunkJson {
 
+  var hanuman:Option[Hanuman] = None
+  var hanumanRefOption:Option[ActorRef] = None
+
+  /** TODO make into configurable parameter */
+  val maxTicks:Int = 10
+
+  /** TODO make into configurable parameter */
+  val monkeysPerVisor:Int = 10
+
   /** Contains simulationID->Option[MonkeyVisorRef] map */
   val simulationStatus = new SimulationStatus()
   val simulationStatusRef = new Ref(simulationStatus)
-  var hanuman:Option[Hanuman] = None
-  var hanumanActorRef:Option[ActorRef] = None
 
-    
   val helloJson: HttpService[ByteChunk] = service("helloJson", "0.1") {
     requestLogging {
       logging {
@@ -74,8 +80,8 @@ trait HelloJsonServices extends BlueEyesServiceBuilder
       val simulationID = UUID.randomUUID().toString
 
       simulationStatus.putSimulation(simulationID, None)
-      hanumanActorRef = Some(Actor.actorOf(new Hanuman(simulationID, document, simulationStatusRef)))
-      simulationStatus.putSimulation(simulationID, hanumanActorRef)
+      hanumanRefOption = Some(Actor.actorOf(new Hanuman(simulationID, monkeysPerVisor, maxTicks, document, simulationStatusRef)))
+      simulationStatus.putSimulation(simulationID, hanumanRefOption)
       simulationStatusRef.set(simulationStatus)
 
       Future.sync(HttpResponse(
@@ -117,8 +123,9 @@ trait HelloJsonServices extends BlueEyesServiceBuilder
   private def doCommand(command:String, simulationID:String):String = {
     command match {
       case "run" =>
-        hanumanActorRef.get.start
-        "Updated simulationStatus with new Hanuman instance " + hanumanActorRef.get.id + " and started hanuman"
+        val hanumanRef = hanumanRefOption.get
+        hanumanRef.start
+        "Updated simulationStatus with new Hanuman instance " + hanumanRef.id + " and started hanuman"
 
       case "status" =>
         val simulationStatus = simulationStatusRef.get

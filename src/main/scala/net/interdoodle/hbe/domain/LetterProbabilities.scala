@@ -5,7 +5,7 @@ import scala.math.{abs, min, max}
 import collection.immutable.TreeMap
 
 /** This class is initialized with a String containing text to analyze for letter frequency. A normalized probability
- * distribution is computed; a random number generator can then be used to generate weighted probabilities for generated
+ * distribution is computed; a random monkeysPerVisor generator can then be used to generate weighted probabilities for generated
  * text. Class contains letter counts and normalized probabilities (0..1)
  * @author Mike Slinn */
 

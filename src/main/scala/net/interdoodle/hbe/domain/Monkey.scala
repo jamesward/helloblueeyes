@@ -3,9 +3,7 @@ package net.interdoodle.hbe.domain
 import akka.actor.Actor
 import akka.config.Supervision.Permanent
 import akka.event.EventHandler
-import collection.mutable.HashMap
-import akka.stm.Ref
-import net.interdoodle.hbe.message.{MonkeyResult, PageGenerated, TypingRequest}
+import net.interdoodle.hbe.message.{PageGenerated, TypingRequest}
 
 
 /** Random or semi-random typist
@@ -21,8 +19,6 @@ class Monkey (val letterProbability:LetterProbabilities) extends Actor {
   // TODO register with MonkeyVisor after restart
 
   
-  def act() = {}
-
   /** @return a semi-random character */
   def generateChar = letterProbability.letter(math.random)
 
@@ -39,10 +35,11 @@ class Monkey (val letterProbability:LetterProbabilities) extends Actor {
 
   def receive = {
     case TypingRequest(monkeyRef) => {
-      EventHandler.info(this, monkeyRef.id + " received TypingRequest")
+      EventHandler.info(this, monkeyRef.uuid + " received TypingRequest")
       self.sender.foreach(_ ! PageGenerated(monkeyRef, this, generatePage))
     }
 
-    case _ => EventHandler.info(this, "Monkey received an unknown message")
+    case _ =>
+      EventHandler.info(this, "Monkey received an unknown message")
   }
 }

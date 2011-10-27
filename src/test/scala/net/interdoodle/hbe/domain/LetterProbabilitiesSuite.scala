@@ -9,7 +9,7 @@ class LetterProbabilitiesSuite extends FunSuite {
 
   test("LetterProbabilities") {
     try {
-      var lps = new LetterProbabilities()
+      val lps = new LetterProbabilities()
 
       lps.add('a')
       assert(lps.size===1)

@@ -14,7 +14,7 @@ class MonkeyVisorSuite extends FunSuite {
   test("generatePage") {
     val simulationID:String = "bogusSimulationID"
     val monkeyResult:MonkeyResult = new MonkeyResult()
-    var monkeyResultRef = Ref(monkeyResult)
+    val monkeyResultRef = Ref(monkeyResult)
     val monkeyResultRefMap = new HashMap[String, Ref[MonkeyResult]]()
     monkeyResultRefMap.put(simulationID, monkeyResultRef)
 
@@ -23,8 +23,8 @@ class MonkeyVisorSuite extends FunSuite {
       "abcdefghijklmnopqrstuvwxyz"*25 +
       "0123456789"*2 +
       "`~!@#$%^&*()_-+={[}]|\\\"':;<,>.?/"
-    val hanuman = Actor.actorOf(new MonkeyVisor(simulationID, document, 10, monkeyResultRefMap)).start()
-    val future = hanuman !!! "generatePages"
+    val monkeyVisor = Actor.actorOf(new MonkeyVisor(simulationID, document, 10, monkeyResultRefMap)).start()
+    val future = monkeyVisor ? "generatePages"
     val result:Any = future.get
     // todo write more tests and MonkeyVisor business logic
   }

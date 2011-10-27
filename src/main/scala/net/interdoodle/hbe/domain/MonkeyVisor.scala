@@ -2,36 +2,43 @@ package net.interdoodle.hbe.domain
 
 import akka.event.EventHandler
 import akka.stm.Ref
-import akka.actor.{Supervisor, Actor, ActorRef}
-import akka.config.Supervision.{OneForOneStrategy, SupervisorConfig}
+import akka.actor.{Actor, ActorRef}
+import akka.config.Supervision.OneForOneStrategy
 import net.interdoodle.hbe.message.{PageGenerated, TypingRequest, MonkeyResult}
-import collection.mutable.{HashMap, LinkedList}
+import collection.mutable.HashMap
 
 
-/** Monkey supervisor creates 'number' Akka Actor references (to type Monkey) with identical probability distributions.
+/** Monkey supervisor creates 'monkeysPerVisor' Akka Actor references (to type Monkey) with identical probability distributions.
  * Dispatches requests to generate semi-random text.
  * @author Mike Slinn */
 class MonkeyVisor(val simulationID:String,
                   val corpus:String,
-                  val number:Int=100,
-                  var monkeyResultRefMap:HashMap[String, Ref[MonkeyResult]]) extends Actor {
+                  val monkeysPerVisor:Int,
+                  val monkeyResultRefMap:HashMap[String, Ref[MonkeyResult]]) extends Actor {
   var busyMonkeyActorRefs = List[ActorRef]()
-  var monkeyActorRefs = List[ActorRef]()
+  var monkeyRefList = List[ActorRef]()
   val letterProbability = new LetterProbabilities()
   letterProbability.add(corpus)
   letterProbability.computeValues()
 
   self.faultHandler = OneForOneStrategy(List(classOf[Throwable]), 5, 5000)
 
-  for (i <- 1 to number) {
-    val monkeyActorRef = Actor.actorOf(new Monkey(letterProbability)).start()
-    monkeyActorRef.id = "monkey_" + i.toString
-    monkeyActorRefs = monkeyActorRef :: monkeyActorRefs
+
+  override def postStop() = {
+    // TODO how to delete Monkeys?
   }
 
+  override def preStart() = {
+    for (i <- 1 to monkeysPerVisor) {
+      val monkeyRef = Actor.actorOf(new Monkey(letterProbability))
+      self.link(monkeyRef)
+      monkeyRefList = monkeyRef :: monkeyRefList
+      monkeyRef.start()
+    }
+  }
 
   def generatePages() {
-    for (monkeyActorRef <- monkeyActorRefs) {
+    for (monkeyActorRef <- monkeyRefList) {
       monkeyActorRef ! TypingRequest(monkeyActorRef)
       busyMonkeyActorRefs = monkeyActorRef :: busyMonkeyActorRefs
     }
@@ -44,16 +51,15 @@ class MonkeyVisor(val simulationID:String,
     }
 
     case PageGenerated(monkeyActorRef, monkey, text) => {
-      println(monkeyActorRef.id + " returned " + text)
+      println(monkeyActorRef.uuid + " returned " + text)
       // TODO add last monkey's results to simulationResult.list
       busyMonkeyActorRefs = remove(monkeyActorRef, busyMonkeyActorRefs)
-      val monkeyResult = monkeyResultRefMap.get(monkeyActorRef.id).get()
+      monkeyActorRef.stop
+      val monkeyResult = monkeyResultRefMap.get(monkeyActorRef.uuid.toString).get()
       if (busyMonkeyActorRefs.isEmpty) {
         monkeyResult.msg = "Monkeys are all finished"
         monkeyResult.complete = true
-        for (monkeyRef <- monkeyActorRefs) {
-          monkeyRef.stop
-        }
+        self.sender ! "MonkeyVisor is done"
       } else {
         monkeyResult.msg = "" + busyMonkeyActorRefs.length + " monkeys are still typing"
       }
