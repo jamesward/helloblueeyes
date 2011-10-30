@@ -3,9 +3,10 @@ package net.interdoodle.hbe.domain
 import akka.event.EventHandler
 import akka.stm.Ref
 import akka.actor.{Actor, ActorRef}
-import akka.config.Supervision.OneForOneStrategy
 import net.interdoodle.hbe.message.{PageGenerated, TypingRequest, MonkeyResult}
 import collection.mutable.HashMap
+import akka.config.Supervision.{Permanent, OneForOneStrategy}
+import scala.collection.JavaConversions._
 
 
 /** Monkey supervisor creates 'monkeysPerVisor' Akka Actor references (to type Monkey) with identical probability distributions.
@@ -15,17 +16,22 @@ class MonkeyVisor(val simulationID:String,
                   val corpus:String,
                   val monkeysPerVisor:Int,
                   val monkeyResultRefMap:HashMap[String, Ref[MonkeyResult]]) extends Actor {
-  var busyMonkeyActorRefs = List[ActorRef]()
   var monkeyRefList = List[ActorRef]()
   val letterProbability = new LetterProbabilities()
   letterProbability.add(corpus)
   letterProbability.computeValues()
 
+  self.lifeCycle = Permanent
   self.faultHandler = OneForOneStrategy(List(classOf[Throwable]), 5, 5000)
 
 
+  /** If any monkey finishes, we are done */
   override def postStop() = {
-    // TODO how to delete Monkeys?
+    for (val monkeyRef <- self.linkedActors.values()) {
+      monkeyRef.stop()
+      self.unlink(monkeyRef)
+      // TODO how to delete Monkeys?
+    }
   }
 
   override def preStart() = {
@@ -40,7 +46,6 @@ class MonkeyVisor(val simulationID:String,
   def generatePages() {
     for (monkeyActorRef <- monkeyRefList) {
       monkeyActorRef ! TypingRequest(monkeyActorRef)
-      busyMonkeyActorRefs = monkeyActorRef :: busyMonkeyActorRefs
     }
   }
 
@@ -51,18 +56,9 @@ class MonkeyVisor(val simulationID:String,
     }
 
     case PageGenerated(monkeyActorRef, totalText, page) => {
-      println(monkeyActorRef.uuid + " returned " + page)
-      // TODO add last monkey's results to simulationResult.list
-      busyMonkeyActorRefs = remove(monkeyActorRef, busyMonkeyActorRefs)
-      monkeyActorRef.stop
+      EventHandler.info(this, monkeyActorRef.uuid + " returned " + text)
+      // TODO add last monkey's results to simulationResult.list and see if they are finished
       val monkeyResult = monkeyResultRefMap.get(monkeyActorRef.uuid.toString).get()
-      if (busyMonkeyActorRefs.isEmpty) {
-        monkeyResult.msg = "Monkeys are all finished"
-        monkeyResult.complete = true
-        self.sender ! "MonkeyVisor is done"
-      } else {
-        monkeyResult.msg = "" + busyMonkeyActorRefs.length + " monkeys are still typing"
-      }
     }
 
     case _ => {

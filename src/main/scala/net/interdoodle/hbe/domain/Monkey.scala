@@ -12,7 +12,6 @@ import net.interdoodle.hbe.message.{PageGenerated, TypingRequest}
 class Monkey (val letterProbability:LetterProbabilities) extends Actor {
   var generatedText = ""
 
-
   self.lifeCycle = Permanent
 
 
