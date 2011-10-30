@@ -7,4 +7,4 @@ import net.interdoodle.hbe.domain.Monkey
 /**
  * @author Mike Slinn */
 
-case class PageGenerated(monkeyRef:ActorRef, monkey:Monkey, text:String)
+case class PageGenerated(monkeyRef:ActorRef, totalText:String, page:String)

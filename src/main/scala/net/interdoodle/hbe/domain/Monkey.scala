@@ -15,10 +15,10 @@ class Monkey (val letterProbability:LetterProbabilities) extends Actor {
 
   self.lifeCycle = Permanent
 
-  
+
   // TODO register with MonkeyVisor after restart
 
-  
+
   /** @return a semi-random character */
   def generateChar = letterProbability.letter(math.random)
 
@@ -28,15 +28,15 @@ class Monkey (val letterProbability:LetterProbabilities) extends Actor {
     { for (i <- 1 to 1000)
         yield(generateChar.toString)
     }.addString(sb)
-    val page = sb.toString()
-    generatedText += page
-    page
+    sb.toString()
   }
 
   def receive = {
     case TypingRequest(monkeyRef) => {
       EventHandler.info(this, monkeyRef.uuid + " received TypingRequest")
-      self.sender.foreach(_ ! PageGenerated(monkeyRef, this, generatePage))
+      var page = generatePage
+      generatedText += page
+      self.sender.foreach(_ ! PageGenerated(monkeyRef, generatedText, page))
     }
 
     case _ =>

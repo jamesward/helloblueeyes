@@ -50,8 +50,8 @@ class MonkeyVisor(val simulationID:String,
       generatePages()
     }
 
-    case PageGenerated(monkeyActorRef, monkey, text) => {
-      println(monkeyActorRef.uuid + " returned " + text)
+    case PageGenerated(monkeyActorRef, totalText, page) => {
+      println(monkeyActorRef.uuid + " returned " + page)
       // TODO add last monkey's results to simulationResult.list
       busyMonkeyActorRefs = remove(monkeyActorRef, busyMonkeyActorRefs)
       monkeyActorRef.stop
