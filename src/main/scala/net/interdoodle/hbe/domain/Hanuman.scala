@@ -22,13 +22,16 @@ class Hanuman(val simulationID:String,
 
   override def postStop() = {
     running = false
-    // TODO how to delete MonkeyVisors?
+    for (val monkeyVisorRef <- self.linkedActors.values()) {
+      monkeyVisorRef.stop() // monkeyVisor's postStop() also stops linked Monkeys
+      self.unlink(monkeyVisorRef)
+    }
   }
 
   override def preStart() = {
     var ticks = 0
     createMonkeyVisor()
-    while (running && ticks>=maxTicks) {
+    while (running && ticks<=maxTicks) {
       tick() // until this Actor is stopped
       ticks += 1
     }
