@@ -1,11 +1,11 @@
 package net.interdoodle.hbe.domain
 
+import akka.config.Supervision.{OneForOneStrategy, Permanent}
 import akka.event.EventHandler
 import akka.stm.Ref
 import akka.actor.{Actor, ActorRef}
-import net.interdoodle.hbe.message.{PageGenerated, TypingRequest, MonkeyResult}
 import collection.mutable.HashMap
-import akka.config.Supervision.{Permanent, OneForOneStrategy}
+import net.interdoodle.hbe.message.{PageGenerated, TypingRequest, MonkeyResult}
 import scala.collection.JavaConversions._
 
 
@@ -56,9 +56,17 @@ class MonkeyVisor(val simulationID:String,
     }
 
     case PageGenerated(monkeyActorRef, totalText, page) => {
-      EventHandler.info(this, monkeyActorRef.uuid + " returned " + text)
-      // TODO add last monkey's results to simulationResult.list and see if they are finished
-      val monkeyResult = monkeyResultRefMap.get(monkeyActorRef.uuid.toString).get()
+      EventHandler.info(this, monkeyActorRef.uuid + " returned " + totalText)
+
+      val textAnalysis = new TextAnalysis()
+      textAnalysis.text = totalText
+      //textAnalysis.resultMap += // TODO figure this out
+      //textAnalysis.addTextMatch() // TODO figure this out
+
+      val monkeyResult = monkeyResultRefMap.getOrElse(monkeyActorRef.uuid.toString, Ref[MonkeyResult]).get()
+      monkeyResult.generatedText = totalText
+      monkeyResult.results = textAnalysis :: monkeyResult.results
+      monkeyResult.complete = false // TODO see if monkey is finished because they matched all the text
     }
 
     case _ => {

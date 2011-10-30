@@ -8,6 +8,6 @@ import net.interdoodle.hbe.domain.TextAnalysis
 
 class MonkeyResult(
   var generatedText:String="",
-  val results:List[TextAnalysis]=Nil,
+  var results:List[TextAnalysis]=Nil,
   var msg:String="",
   var complete:Boolean = false)
