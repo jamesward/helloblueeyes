@@ -24,7 +24,7 @@ trained with a map of character->probability when they are constructed. A simula
 Monkey actors send a status update message to their MonkeyVisor instance after generating each page of text.
 MonkeyVisors summarize the results of the Monkey actors that they supervise in messages sent to the Hanuman actor, which
 serves as the interface to HelloJsonServices. Akka Refs are passed into each Actor, which sets/gets result values
-atomically using shared-nothing state. Clients can to query the results up to the previous (or maybe the next) tick.
+atomically using shared-nothing state. Clients can query the results up to the previous (or maybe the next) tick.
 Status within the active tick is opaque.
 
 Run locally
