@@ -1,5 +1,19 @@
-Simple "Hello, World" with BlueEyes
-===================================
+Not-So-Simple "Hello, World" with BlueEyes
+==========================================
+
+This project demonstrates the [BlueEyes](https://github.com/jdegoes/blueeyes) Scala framework, Akka Actors and Refs, and Heroku; it can also be run on any
+suitably equipped server.
+
+The BlueEyes framework encapsulates Netty, which acts as a web container. The HelloBlueEyes application services are
+defined by the BlueEyes DSL, including services for HTML GET, JSON GET and POST, and MongoDB. The JsonService acts as a
+front-end for a hierarchy of Akka Actors, including Hanuman (the mythological monkey god), MonkeyVisor (an Akka
+Supervisor) and Monkeys. Monkeys generate pages of random text. MonkeyVisors compare the text to a target document, and
+Monkeys are scored on how closely their random text matches the target.
+
+Each Monkey provides a status update after generating a page of text, and MonkeyVisors
+summarize the results of the Monkeys that they supervise in order to present it to the Hanuman actor, which serves as
+the interface to the JsonService. Akka Refs are passed into each Actor, which sets/gets result values atomically using
+shared-nothing state.
 
 Run locally
 --------------
