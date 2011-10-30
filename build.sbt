@@ -17,9 +17,10 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "se.scalablesolutions.akka" % "akka-actor" % "1.2",
-  "se.scalablesolutions.akka" % "akka-stm" % "1.2",
-  "se.scalablesolutions.akka" % "akka-typed-actor" % "1.2",
-  "com.reportgrid" % "blueeyes_2.9.1" % "latest.integration" % "compile",
-  "org.scalatest" %% "scalatest" % "1.6.1" % "test"
+  "se.scalablesolutions.akka" % "akka-actor"       % "latest.integration"              withSources(),
+  "se.scalablesolutions.akka" % "akka-stm"         % "latest.integration"              withSources(),
+  "se.scalablesolutions.akka" % "akka-typed-actor" % "latest.integration"              withSources(),
+  "com.reportgrid"           %% "blueeyes"         % "latest.integration"  % "compile" withSources(),
+  "org.scalatest"            %% "scalatest"        % "latest.integration"  % "test"    withSources()
 )
+
