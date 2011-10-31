@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" output="target/scala-2.9.1/classes" path="src/main/scala"/>
+	<classpathentry kind="src" output="target/scala-2.9.1/classes" path="src/main/resources"/>
+	<classpathentry kind="src" output="target/scala-2.9.1/test-classes" path="src/test/scala"/>
+	<classpathentry kind="lib" path="C:/Documents and Settings/Mike Slinn/.ivy2/cache/se.scalablesolutions.akka/akka-actor/jars/akka-actor-1.2.jar"/>
+	<classpathentry kind="lib" path="C:/Documents and Settings/Mike Slinn/.ivy2/cache/se.scalablesolutions.akka/akka-stm/jars/akka-stm-1.2.jar"/>
+	<classpathentry kind="lib" path="C:/Documents and Settings/Mike Slinn/.ivy2/cache/org.multiverse/multiverse-alpha/jars/multiverse-alpha-0.6.2.jar"/>
+	<classpathentry kind="lib" path="C:/Documents and Settings/Mike Slinn/.ivy2/cache/se.scalablesolutions.akka/akka-typed-actor/jars/akka-typed-actor-1.2.jar"/>
+	<classpathentry kind="lib" path="C:/Documents and Settings/Mike Slinn/.ivy2/cache/org.guiceyfruit/guice-all/jars/guice-all-2.0.jar"/>
+	<classpathentry kind="lib" path="C:/Documents and Settings/Mike Slinn/.ivy2/cache/org.codehaus.aspectwerkz/aspectwerkz/jars/aspectwerkz-2.2.3.jar"/>
+	<classpathentry kind="lib" path="C:/Documents and Settings/Mike Slinn/.ivy2/cache/aopalliance/aopalliance/jars/aopalliance-1.0.jar"/>
+	<classpathentry kind="lib" path="C:/Documents and Settings/Mike Slinn/.ivy2/cache/com.reportgrid/blueeyes_2.9.1/jars/blueeyes_2.9.1-0.4.26.jar"/>
+	<classpathentry kind="lib" path="C:/Documents and Settings/Mike Slinn/.ivy2/cache/com.googlecode.concurrentlinkedhashmap/concurrentlinkedhashmap-lru/jars/concurrentlinkedhashmap-lru-1.1.jar"/>
+	<classpathentry kind="lib" path="C:/Documents and Settings/Mike Slinn/.ivy2/cache/commons-codec/commons-codec/jars/commons-codec-1.5.jar"/>
+	<classpathentry kind="lib" path="C:/Documents and Settings/Mike Slinn/.ivy2/cache/joda-time/joda-time/jars/joda-time-1.6.2.jar"/>
+	<classpathentry kind="lib" path="C:/Documents and Settings/Mike Slinn/.ivy2/cache/net.lag/configgy/jars/configgy-2.0.0.jar"/>
+	<classpathentry kind="lib" path="C:/Documents and Settings/Mike Slinn/.ivy2/cache/org.scala-tools.testing/specs_2.8.0/jars/specs_2.8.0-1.6.5.jar"/>
+	<classpathentry kind="lib" path="C:/Documents and Settings/Mike Slinn/.ivy2/cache/org.scala-tools/vscaladoc/jars/vscaladoc-1.1-md-3.jar"/>
+	<classpathentry kind="lib" path="C:/Documents and Settings/Mike Slinn/.ivy2/cache/org.jboss.netty/netty/bundles/netty-3.2.4.Final.jar"/>
+	<classpathentry kind="lib" path="C:/Documents and Settings/Mike Slinn/.ivy2/cache/org.mongodb/mongo-java-driver/jars/mongo-java-driver-2.6.5.jar" sourcepath="C:/Documents and Settings/Mike Slinn/.m2/repository/org/mongodb/mongo-java-driver/2.6.5/mongo-java-driver-2.6.5-sources.jar"/>
+	<classpathentry kind="lib" path="C:/Documents and Settings/Mike Slinn/.ivy2/cache/org.xlightweb/xlightweb/jars/xlightweb-2.13.2.jar"/>
+	<classpathentry kind="lib" path="C:/Documents and Settings/Mike Slinn/.ivy2/cache/org.xsocket/xSocket/jars/xSocket-2.8.15.jar"/>
+	<classpathentry kind="lib" path="C:/Documents and Settings/Mike Slinn/.ivy2/cache/rhino/js/jars/js-1.7R2.jar"/>
+	<classpathentry kind="lib" path="C:/Documents and Settings/Mike Slinn/.ivy2/cache/javolution/javolution/bundles/javolution-5.5.1.jar"/>
+	<classpathentry kind="lib" path="C:/Documents and Settings/Mike Slinn/.ivy2/cache/org.scalaz/scalaz-core_2.9.1/jars/scalaz-core_2.9.1-6.0.2.jar"/>
+	<classpathentry kind="lib" path="C:/Documents and Settings/Mike Slinn/.ivy2/cache/org.scalatest/scalatest_2.9.1/jars/scalatest_2.9.1-1.6.1.jar"/>
+	<classpathentry kind="con" path="org.scala-ide.sdt.launching.SCALA_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="output" path="target/scala-2.9.1/classes"/>
+</classpath>
