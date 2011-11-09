@@ -17,7 +17,7 @@ Run locally
 
 4. Run the app:
 
-        target/start
+        sbt run
 
 
 Run clients against local service instances
