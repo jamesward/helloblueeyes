@@ -30,66 +30,82 @@ trait HelloMongoServices extends BlueEyesServiceBuilder with MongoQueryBuilder w
       } ->
       request { helloConfig: HelloConfig =>
         path("/mongo") {
-          accept(application/json) {
-            produce(application/json) {
-              get { request: HttpRequest[ByteChunk] =>
-                helloConfig.database(selectAll.from("ticks")) map { records =>
-                  HttpResponse[JValue](content = Some(JArray(records.toList)))
-                }
+          jvalue {
+            get { request: HttpRequest[JValue] =>
+              helloConfig.database(selectAll.from("bars")) map { records =>
+                HttpResponse[JValue](content = Some(JArray(records.toList)))
               }
+            }
+          } ~
+          jvalue {
+            post { request: HttpRequest[JValue] =>
+              request.content map { jv: JValue =>
+                helloConfig.database(insert(jv --> classOf[JObject]).into("bars"))
+                Future.sync(HttpResponse[JValue](content = request.content))
+              } getOrElse {
+                Future.sync(HttpResponse[JValue](status = HttpStatus(BadRequest)))
+              }
+            }
+          } ~
+          produce(text/html) {
+            get { request: HttpRequest[ByteChunk] =>
+              val content = """<!DOCTYPE html>
+                <html xmlns="http://www.w3.org/1999/xhtml">
+                <head>
+                  <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.min.js"></script>
+                  <script type="text/javascript">
+                    $(function() {
+
+                      $("#submit").click(addBar);
+                      $("#bar").keyup(function(key) {
+                        if (key.which == 13) {
+                          addBar();
+                        }
+                      });
+
+                      loadBars();
+
+                    });
+
+                    function loadBars() {
+                      $.ajax("/mongo", {
+                        contentType: "application/json",
+                        success: function(data) {
+                          $("#bars").children().remove();
+                          $.each(data, function(index, item) {
+                            $("#bars").append("<li>" + item.name + "</li>");
+                          });
+                        }
+                      });
+                    }
+
+                    function addBar() {
+                      $.ajax({
+                        url: "/mongo",
+                        type: 'post',
+                        dataType: 'json',
+                        success: loadBars,
+                        data: '{"name": "' + $("#bar").val() + '"}',
+                        contentType: 'application/json'
+                      });
+                    }
+                  </script>
+                </head>
+                <body>
+                  <h4>Bars:</h4>
+                  <ul id="bars">
+                  </ul>
+                  <h4>Add a Bar:</h4>
+                  <input id="bar"/>
+                  <button id="submit">GO!</button>
+                </body>
+                </html>
+                """;
+              val response = HttpResponse[String](content = Some(content))
+              Future.sync(response)
             }
           }
         }
-          /*
-          {
-            get { request: HttpRequest[ByteChunk] =>
-              val content = <html>
-                              <body>Hello, world!</body>
-                            </html>
-
-              val response = HttpResponse[String](content = Some(content.buildString(true)))
-              Future.sync(response)
-            }
-          } ~
-          produce(application/json) {
-            get { request: HttpRequest[ByteChunk] =>
-              helloConfig.database(selectAll.from("ticks")) map { records =>
-                HttpResponse[String](
-                  content = Some("parseData(" +  Printer.compact(Printer.render(JArray(records.toList))) + ")")
-                )
-              }
-            }
-          }
-           */
-           /*~
-              post { request: HttpRequest[String] =>
-
-                request.content map { c =>
-                  c.foreach( bc =>
-                    println(bc)
-                  )
-                }
-
-                /*{
-
-                  val s:JString = JString("testing")
-                  val f:JField = JField("foo", s)
-                  var o:JObject = JObject(List(f))
-                  log.info(Printer.pretty(Printer.render(o)))
-
-                  _.flatMap(v => helloConfig.database(insert(v --> classOf[JObject]).into("ticks")) map (_ => HttpResponse[JValue]()))
-
-                  //helloConfig.database(insert(o).into("ticks"))
-
-
-
-                } getOrElse {
-
-                }
-                */
-                Future.sync(HttpResponse[JValue](status = HttpStatus(BadRequest)))
-              }
-              */
       } ->
       shutdown { helloConfig: HelloConfig =>
         Future.sync(())

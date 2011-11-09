@@ -39,6 +39,7 @@ trait HelloJsonServices extends BlueEyesServiceBuilder with BijectionsChunkJson 
                 </script>
               </head>
               <body>
+                <h1>Fetching JSON</h1>
                 <div id="result">
                 </div>
               </body>
