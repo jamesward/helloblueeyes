@@ -1,4 +1,4 @@
-package net.interdoodle.hbe
+package net.interdoodle.example
 
 import blueeyes.core.service.{HttpReflectiveServiceList, HttpServer}
 import blueeyes.core.data._

@@ -1,4 +1,4 @@
-package net.interdoodle.hbe
+package net.interdoodle.example
 
 import blueeyes.core.service.HttpServer
 import net.lag.configgy.Configgy

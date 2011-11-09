@@ -1,5 +1,4 @@
-package net.interdoodle.hbe
-
+package net.interdoodle.example
 
 /**
  * @author James Ward */
