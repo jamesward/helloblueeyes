@@ -9,7 +9,7 @@ import blueeyes.core.http.combinators.HttpRequestCombinators
 import blueeyes.core.data.{ByteChunk, BijectionsChunkString, BijectionsChunkJson}
 import blueeyes.json.Printer;
 import blueeyes.json.JsonAST.{JField, JString, JObject, JArray, JValue}
-import blueeyes.persistence.mongo.MongoQueryBuilder
+import blueeyes.persistence.mongo.{MongoQueryBuilder, MongoSelectQuery}
 import blueeyes.persistence.mongo.EnvMongo
 
 
@@ -30,14 +30,14 @@ trait HelloMongoServices extends BlueEyesServiceBuilder with MongoQueryBuilder w
       } ->
       request { helloConfig: HelloConfig =>
         path("/mongo") {
-          jvalue {
+          contentType(application/json) {
             get { request: HttpRequest[JValue] =>
               helloConfig.database(selectAll.from("bars")) map { records =>
                 HttpResponse[JValue](content = Some(JArray(records.toList)))
               }
             }
           } ~
-          jvalue {
+          contentType(application/json) {
             post { request: HttpRequest[JValue] =>
               request.content map { jv: JValue =>
                 helloConfig.database(insert(jv --> classOf[JObject]).into("bars"))
@@ -49,60 +49,17 @@ trait HelloMongoServices extends BlueEyesServiceBuilder with MongoQueryBuilder w
           } ~
           produce(text/html) {
             get { request: HttpRequest[ByteChunk] =>
-              val content = """<!DOCTYPE html>
-                <html xmlns="http://www.w3.org/1999/xhtml">
-                <head>
-                  <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.min.js"></script>
-                  <script type="text/javascript">
-                    $(function() {
+              val contentUrl = System.getenv("CONTENT_URL")
 
-                      $("#submit").click(addBar);
-                      $("#bar").keyup(function(key) {
-                        if (key.which == 13) {
-                          addBar();
-                        }
-                      });
-
-                      loadBars();
-
-                    });
-
-                    function loadBars() {
-                      $.ajax("/mongo", {
-                        contentType: "application/json",
-                        success: function(data) {
-                          $("#bars").children().remove();
-                          $.each(data, function(index, item) {
-                            $("#bars").append("<li>" + item.name + "</li>");
-                          });
-                        }
-                      });
-                    }
-
-                    function addBar() {
-                      $.ajax({
-                        url: "/mongo",
-                        type: 'post',
-                        dataType: 'json',
-                        success: loadBars,
-                        data: '{"name": "' + $("#bar").val() + '"}',
-                        contentType: 'application/json'
-                      });
-                    }
-                  </script>
-                </head>
-                <body>
-                  <h4>Bars:</h4>
-                  <ul id="bars">
-                  </ul>
-                  <h4>Add a Bar:</h4>
-                  <input id="bar"/>
-                  <button id="submit">GO!</button>
-                </body>
-                </html>
-                """;
-              val response = HttpResponse[String](content = Some(content))
-              Future.sync(response)
+              val content = <html xmlns="http://www.w3.org/1999/xhtml">
+                              <head>
+                                <script type="text/javascript" src={contentUrl + "jquery-1.7.min.js"}></script>
+                                <script type="text/javascript" src={contentUrl + "hello_mongo.js"}></script>
+                              </head>
+                              <body>
+                              </body>
+                            </html>
+              Future.sync(HttpResponse[String](content = Some(content.buildString(true))))
             }
           }
         }

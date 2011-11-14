@@ -23,29 +23,17 @@ trait HelloJsonServices extends BlueEyesServiceBuilder with BijectionsChunkJson 
         } ~
         produce(text/html) {
           get { request: HttpRequest[ByteChunk] =>
-            val content = """<!DOCTYPE html>
-            <html xmlns="http://www.w3.org/1999/xhtml">
+            val contentUrl = System.getenv("CONTENT_URL")
+
+            val content = <html xmlns="http://www.w3.org/1999/xhtml">
               <head>
-                <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.min.js"></script>
-                <script type="text/javascript">
-                  $(function() {
-                    $.ajax("/json", {
-                      contentType: "application/json",
-                      success: function(data) {
-                        $("#result").append(data.result);
-                      }
-                    });
-                  });
-                </script>
+                <script type="text/javascript" src={contentUrl + "jquery-1.7.min.js"}></script>
+                <script type="text/javascript" src={contentUrl + "hello_json.js"}></script>
               </head>
               <body>
-                <h1>Fetching JSON</h1>
-                <div id="result">
-                </div>
               </body>
-            </html>""";
-            val response = HttpResponse[String](content = Some(content))
-            Future.sync(response)
+            </html>
+            Future.sync(HttpResponse[String](content = Some(content.buildString(true))))
           }
         }
       }
