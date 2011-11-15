@@ -14,7 +14,7 @@ trait EnvHttpServer extends HttpServer { self =>
   override def main(args: Array[String]) {
     
     // build a config string
-    val configString = "server.port = " + Properties.envOrElse("PORT", "8585") + "\n" +
+    val configString = "server.port = " + Properties.envOrElse("PORT", "8080") + "\n" +
                        "server.sslEnable = " + Properties.envOrElse("SSL_ENABLE", "false")
     
     Configgy.configureFromString(configString)

@@ -1,1 +1,1 @@
-web: target/start
+web: target/start net.interdoodle.example.AppServer

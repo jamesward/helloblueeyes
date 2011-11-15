@@ -1,4 +1,4 @@
-package net.interdoodle.example
+package net.interdoodle.example.httpstaticfileserver
 
 import org.jboss.netty.handler.codec.http.HttpHeaders._
 import org.jboss.netty.handler.codec.http.HttpHeaders.Names._

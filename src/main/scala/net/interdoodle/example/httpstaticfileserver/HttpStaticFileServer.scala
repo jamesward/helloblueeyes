@@ -1,4 +1,4 @@
-package net.interdoodle.example
+package net.interdoodle.example.httpstaticfileserver
 
 import java.net.InetSocketAddress
 import java.util.concurrent.Executors
@@ -19,6 +19,6 @@ object HttpStaticFileServer extends App {
   bootstrap.setPipelineFactory(new HttpStaticFileServerPipelineFactory("src/main/webapp"));
 
   // Bind and start to accept incoming connections.
-  bootstrap.bind(new InetSocketAddress(System.getenv("PORT").orElse(8080)));
+  bootstrap.bind(new InetSocketAddress(System.getenv("PORT").orElse(9090)));
 
 }

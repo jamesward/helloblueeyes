@@ -1,4 +1,4 @@
-package net.interdoodle.example
+package net.interdoodle.example.httpstaticfileserver
 
 import org.jboss.netty.channel.{Channels, ChannelPipeline, ChannelPipelineFactory}
 import org.jboss.netty.handler.codec.http.{HttpResponseEncoder, HttpChunkAggregator, HttpRequestDecoder}
