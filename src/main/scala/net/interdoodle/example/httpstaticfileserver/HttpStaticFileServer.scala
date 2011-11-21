@@ -5,6 +5,7 @@ import java.util.concurrent.Executors
 
 import org.jboss.netty.bootstrap.ServerBootstrap
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory
+import util.Properties
 
 object HttpStaticFileServer extends App {
 
@@ -19,6 +20,6 @@ object HttpStaticFileServer extends App {
   bootstrap.setPipelineFactory(new HttpStaticFileServerPipelineFactory("src/main/webapp"));
 
   // Bind and start to accept incoming connections.
-  bootstrap.bind(new InetSocketAddress(System.getenv("PORT").orElse(9090)));
+  bootstrap.bind(new InetSocketAddress(Properties.envOrElse("PORT", "9090").toInt));
 
 }

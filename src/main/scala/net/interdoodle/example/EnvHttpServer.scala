@@ -7,7 +7,9 @@ import util.Properties
 
 
 /**
- * @author James Ward */
+ * @author James Ward
+ *
+ */
 
 trait EnvHttpServer extends HttpServer { self =>
 

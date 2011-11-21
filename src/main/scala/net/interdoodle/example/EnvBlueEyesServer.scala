@@ -8,8 +8,4 @@ import blueeyes.core.service.engines.NettyEngine
 /** Server definition
  * @author James Ward */
 
-trait EnvBlueEyesServer extends EnvHttpServer with HttpReflectiveServiceList[ByteChunk] with NettyEngine {
-
-
-
-}
+trait EnvBlueEyesServer extends EnvHttpServer with HttpReflectiveServiceList[ByteChunk] with NettyEngine
