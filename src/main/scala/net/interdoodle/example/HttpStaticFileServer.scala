@@ -19,6 +19,5 @@ object HttpStaticFileServer extends App {
   bootstrap.setPipelineFactory(new HttpStaticFileServerPipelineFactory("src/main/webapp"));
 
   // Bind and start to accept incoming connections.
-  bootstrap.bind(new InetSocketAddress(System.getenv("PORT").orElse(8080)));
-
+  bootstrap.bind(new InetSocketAddress(System.getenv("PORT").orElse("8080").asInstanceOf[Int]));
 }

@@ -4,6 +4,7 @@
 /project/target
 /target
 /.idea
+.cache
 /.idea_modules
 /lib
 *~
