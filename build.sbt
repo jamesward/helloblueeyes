@@ -1,5 +1,6 @@
 import com.typesafe.startscript.StartScriptPlugin
 
+// add all the settings in (StartScriptPlugin.startScriptForClassesSettings into this project
 seq(StartScriptPlugin.startScriptForClassesSettings: _*)
 
 name := "helloblueeyes"
