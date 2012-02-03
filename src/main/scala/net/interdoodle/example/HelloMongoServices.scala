@@ -14,6 +14,7 @@ import blueeyes.persistence.mongo.EnvMongo
 
 
 import com.mongodb.MongoURI
+import util.Properties
 
 trait HelloMongoServices extends BlueEyesServiceBuilder with MongoQueryBuilder with BijectionsChunkJson with BijectionsChunkString {
 
@@ -21,9 +22,7 @@ trait HelloMongoServices extends BlueEyesServiceBuilder with MongoQueryBuilder w
     logging { log => context =>
       startup {
         // use MONGOLAB_URI in form: mongodb://username:password@host:port/database
-        val mongolabUri = System.getenv("MONGOLAB_URI")
-        if (mongolabUri==null)
-          throw new Exception("MONGOLAB_URI environment variable was not defined");
+        val mongolabUri = Properties.envOrElse("MONGOLAB_URI", "mongodb://127.0.0.1:27017/hello")
         val mongoURI = new MongoURI(mongolabUri)
 
         HelloConfig(new EnvMongo(mongoURI, context.config.configMap("mongo"))).future
