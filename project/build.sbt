@@ -2,7 +2,7 @@ resolvers += Classpaths.typesafeResolver
 
 resolvers += "sbt-idea-repo" at "http://mpeltonen.github.com/maven/"
 
-addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "0.11.0")
+addSbtPlugin("com.github.mpeltonen" % "sbt-idea" % "1.0.0")
 
 addSbtPlugin("com.typesafe.startscript" % "xsbt-start-script-plugin" % "0.5.0")
 
